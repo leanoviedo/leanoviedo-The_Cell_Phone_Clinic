@@ -105,8 +105,8 @@ const CustomSidebar: React.FC = () => {
 
   const menuItems = [
     { text: "home", icon: <HomeIcon />, path: "/" },
-    { text: "Accessories", icon: <PhoneAndroidIcon />, path: "/Accessories" },
-    { text: "Phones", icon: <HeadphonesIcon />, path: "/" },
+    { text: "Accessories", icon: <HeadphonesIcon />, path: "/Accessories" },
+    { text: "Phones", icon: <PhoneAndroidIcon />, path: "/" },
   ];
 
   return (
