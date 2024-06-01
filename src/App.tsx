@@ -1,20 +1,13 @@
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import CustomSidebar from "./Components/CustomSidebar";
 
-const App = () => {
+
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>La Clinica del Celular</h1>
-    </>
+    <Router>
+      <CustomSidebar />
+    </Router>
   );
 };
 
