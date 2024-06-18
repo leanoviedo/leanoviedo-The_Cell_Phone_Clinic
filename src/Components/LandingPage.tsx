@@ -9,34 +9,32 @@ import {
   CardActions,
   CardMedia,
   IconButton,
-  Box,
   CardActionArea,
 } from "@mui/material";
 import BookmarkAdd from "@mui/icons-material/BookmarkAddOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import Carousel from "react-material-ui-carousel";
 import CustomSidebar from "./CustomSidebar";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
     name: "Promoción 1",
     description: "Descripción de la promoción 1",
-    image: "public/images/imagenes de accesorios/Memories-SanDisk-64Gb .webp",
+    image: "/images/imagenes de accesorios/luz-led-5-metros.webp",
     link: "/accessories/",
   },
   {
     name: "Promoción 2",
     description: "Descripción de la promoción 2",
     image:
-      "public/images/imagenes de accesorios/auriculares/61c08494a6a4a1-1f8de48ecb0cbbd65516933460314928-1024-1024.webp",
+      "/images/imagenes de accesorios/auriculares/61c08494a6a4a1-1f8de48ecb0cbbd65516933460314928-1024-1024.webp",
     link: "/accessories",
   },
   {
-    name: "Promoción 3",
-    description: "Descripción de la promoción 3",
+    name: "Auriculares samsung ",
+    description: "auricular samsung blanco precio:$3500",
     image:
-      "public/images/imagenes de accesorios/auriculares/v4xzfnygr94x3xlg2tg3nwunaml0lypxwdu6cyci1-242a55555454b31d6916933459293535-1024-1024.webp",
+      "/images/imagenes de accesorios/auriculares/v4xzfnygr94x3xlg2tg3nwunaml0lypxwdu6cyci1-242a55555454b31d6916933459293535-1024-1024.webp",
     link: "/accessories",
   },
 ];
@@ -56,7 +54,7 @@ const LandingPages: React.FC = () => {
       >
         <Grid item>
           <img
-            src="public/images/imageslogodog.jpeg"
+            src="/images/imageslogodog.jpeg"
             alt="logo_Doc"
             style={{ height: "150px", width: "180px" }}
           />
@@ -72,7 +70,7 @@ const LandingPages: React.FC = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Typography variant="h6" align="center" color="textSecondary" paragraph>
+      <Typography variant="h6" align="center" color="InfoText" paragraph>
         Encuentra los mejores productos a los mejores precios.
       </Typography>
       <Grid container spacing={2} justifyContent="center">
@@ -81,7 +79,7 @@ const LandingPages: React.FC = () => {
             <Card sx={{ position: "relative" }}>
               <CardMedia
                 component="img"
-                height="200"
+                height="250"
                 image={item.image}
                 alt={item.name}
               />
@@ -114,79 +112,24 @@ const LandingPages: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <Typography
-        variant="h6"
-        align="center"
-        color="textPrimary"
-        paragraph
-        sx={{ marginTop: 4 }}
-      >
-        Promociones de reparación de celulares
-      </Typography>
-      <Box sx={{ maxWidth: 800, mx: "auto" }}>
-        <Carousel
-          autoPlay
-          animation="slide"
-          indicators
-          navButtonsAlwaysVisible
-          navButtonsProps={{
-            style: {
-              backgroundColor: "transparent",
-              color: "#555",
-            },
-          }}
-          indicatorContainerProps={{
-            style: {
-              position: "absolute",
-              bottom: -30,
-              textAlign: "center",
-            },
-          }}
-          activeIndicatorIconButtonProps={{
-            style: {
-              color: "#555",
-            },
-          }}
-        >
-          {items.map((item, i) => (
-            <Card key={i}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={item.image}
-                alt={item.name}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {item.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {item.description}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate(item.link)}
-                  sx={{ marginLeft: "auto" }}
-                >
-                  Ver más
-                </Button>
-              </CardActions>
-            </Card>
-          ))}
-        </Carousel>
-      </Box>
-
       <Grid container justifyContent="center">
-        <Card sx={{ maxWidth: 550 }}>
+        <Card sx={{ maxWidth: 550, marginBottom: 5, marginTop: 5 }}>
+          <Typography
+            variant="h6"
+            align="center"
+            color="textPrimary"
+            paragraph
+            sx={{ marginTop: 4 }}
+          >
+            Servicio técnico: los mejores presupuestos a los mejores precios,
+            pedi tu presupuesto aqui...!!!
+          </Typography>
           <CardActionArea>
             <CardMedia
               component="img"
               height="200px"
               width="200px"
-              image="public/images/logo de reparacion.jpg"
+              image="/images/logo de reparacion.jpg"
               alt="green iguana"
             />
             <CardContent>
@@ -197,21 +140,16 @@ const LandingPages: React.FC = () => {
                 paragraph
                 sx={{ marginTop: 4 }}
               >
-                Servicio técnico: los mejores presupuestos a los mejores
-                precios, pedi tu presupuesto aqui...!!!
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
                 hacemos cambios de modulo,baterias,pines de carga,reparacion de
-                placa,cambio de class,baño quimico y mucho mas
+                placa,cambio de class,baño quimico y mucho mas...!!!
               </Typography>
             </CardContent>
           </CardActionArea>
-          <CardActions>
+          <CardActions sx={{ justifyContent: "center", mb: 2 }}>
             <Button
               variant="contained"
               color="success"
               size="large"
-              sx={{ marginLeft: "130px" }}
               href="https://wa.me/2615555634?text=hola%20vengo%20de%20tu%20pagina%20web%20necesito%20reparar%20mi%20celular"
               startIcon={<WhatsAppIcon />}
             >
