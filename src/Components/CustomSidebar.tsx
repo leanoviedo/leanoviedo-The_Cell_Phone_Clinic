@@ -1,184 +1,114 @@
-import * as React from "react";
 import { Link } from "react-router-dom";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
-import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
-import { ListItemIcon } from "@mui/material";
-
-const drawerWidth = 240;
-
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
+import { AppBar, Toolbar, Box, Container, Button, Avatar } from "@mui/material";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+const menuItems = [
+  { text: "Home", icon: <HomeIcon sx={{ mr: 1 }} />, path: "/" },
+  {
+    text: "Accessories",
+    icon: <HeadphonesIcon sx={{ mr: 1 }} />,
+    path: "/Accessories",
   },
-});
+  {
+    text: "Phones",
+    icon: <PhoneAndroidIcon sx={{ mr: 1 }} />,
+    path: "/Phones",
+  },
+  {
+    text: "",
+    icon: <WhatsAppIcon sx={{ mr: 1, color: "green" }} />,
+    path: "/https://wa.me/2615555634?text=Hola%20vengo%20de%20tu%20página%20web%20y%20necesito%20reparar%20mi%20celular",
+  },
+  {
+    text: "",
+    icon: <InstagramIcon sx={{ mr: 1, color: "violet" }} />,
+    path: "/http://instagram.com/la.clinica.del.celular/",
+  },
+];
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
-const CustomSidebar: React.FC = () => {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const menuItems = [
-    { text: "home", icon: <HomeIcon />, path: "/" },
-    { text: "Accessories", icon: <HeadphonesIcon />, path: "/Accessories" },
-    { text: "Phones", icon: <PhoneAndroidIcon />, path: "/" },
-  ];
-
+function ResponsiveAppBar() {
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "white",
+        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+      }}
+    >
+      <Container maxWidth="xl">
+        <Toolbar
+          disableGutters
+          sx={{
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box
+            component={Link}
+            to="/"
             sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              "&:hover": {
+                opacity: 0.8,
+              },
             }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            La Clinica del celular
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {menuItems.map((item, index) => (
-            <ListItem key={index} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
+            <Avatar
+              src="/images/imageslogodog.jpeg"
+              alt="logo_Doc"
+              sx={{
+                width: 80,
+                height: 80,
+                mr: 1,
+              }}
+            />
+            <Box
+              sx={{
+                color: "#349eeb",
+                fontWeight: "bold",
+                fontSize: "24px",
+              }}
+            >
+              La Clinica del Celular
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
+            {menuItems.map((item) => (
+              <Button
+                key={item.text}
                 component={Link}
                 to={item.path}
+                sx={{
+                  color: "#349eeb", // 🖤 Botones con texto negro
+                  display: "flex",
+                  alignItems: "center",
+                  textTransform: "none",
+                  px: 2,
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0", // 🎨 Fondo gris claro al pasar el mouse
+                  },
+                }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-
-        <Divider />
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-      </Box>
-    </Box>
+                {item.icon}
+                {item.text}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
-};
+}
 
-export default CustomSidebar;
+export default ResponsiveAppBar;
