@@ -1,164 +1,192 @@
-import React from "react";
-import {
-  Container,
-  Grid,
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  CardActions,
-  CardMedia,
-  IconButton,
-  CardActionArea,
-} from "@mui/material";
-import BookmarkAdd from "@mui/icons-material/BookmarkAddOutlined";
+import { Container, Typography, Button, Box, Paper } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import CustomSidebar from "./CustomSidebar";
-import { useNavigate } from "react-router-dom";
-
-const items = [
-  {
-    name: "Promoción 1",
-    description: "Descripción de la promoción 1",
-    image: "/images/imagenes de accesorios/luz-led-5-metros.webp",
-    link: "/accessories/",
-  },
-  {
-    name: "Promoción 2",
-    description: "Descripción de la promoción 2",
-    image:
-      "/images/imagenes de accesorios/auriculares/61c08494a6a4a1-1f8de48ecb0cbbd65516933460314928-1024-1024.webp",
-    link: "/accessories",
-  },
-  {
-    name: "Auriculares samsung ",
-    description: "auricular samsung blanco precio:$3500",
-    image:
-      "/images/imagenes de accesorios/auriculares/v4xzfnygr94x3xlg2tg3nwunaml0lypxwdu6cyci1-242a55555454b31d6916933459293535-1024-1024.webp",
-    link: "/accessories",
-  },
-];
-
-const LandingPages: React.FC = () => {
-  const navigate = useNavigate();
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/autoplay";
+import { Autoplay } from "swiper/modules";
+import Carousel from "react-material-ui-carousel";
+import { promotions, serviceImages } from "../MockData/mock-data.tsx";
+const LandingPages = () => {
   return (
-    <Container sx={{ mt: "-160px" }}>
-      <CustomSidebar />
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        spacing={0}
-        sx={{ mb: 2 }}
-      >
-        <Grid item>
-          <img
-            src="/images/imageslogodog.jpeg"
-            alt="logo_Doc"
-            style={{ height: "150px", width: "180px" }}
-          />
-        </Grid>
-        <Grid item>
+    <Box
+      sx={{
+        backgroundImage: 'url("/images/fondo1.jpeg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <Box sx={{ backdropFilter: "brightness(0.8)", py: 5 }}>
+        <Container>
           <Typography
-            variant="h2"
+            variant="h4"
             align="center"
-            color="primary"
-            sx={{ fontWeight: "bold" }}
+            color="white"
+            fontWeight="bold"
+            mb={4}
           >
-            La Clinica del Celular
+            Servicio técnico especializado en celulares
           </Typography>
-        </Grid>
-      </Grid>
-      <Typography variant="h6" align="center" color="InfoText" paragraph>
-        Encuentra los mejores productos a los mejores precios.
-      </Typography>
-      <Grid container spacing={2} justifyContent="center">
-        {items.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ position: "relative" }}>
-              <CardMedia
-                component="img"
-                height="250"
-                image={item.image}
-                alt={item.name}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {item.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {item.description}
-                </Typography>
-                <IconButton
-                  aria-label={`bookmark ${item.name}`}
-                  color="primary"
-                  sx={{ position: "absolute", top: 10, right: 10 }}
-                >
-                  <BookmarkAdd />
-                </IconButton>
-              </CardContent>
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate(item.link)}
-                  sx={{ marginLeft: "auto" }}
-                >
-                  Ver más
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      <Grid container justifyContent="center">
-        <Card sx={{ maxWidth: 550, marginBottom: 5, marginTop: 5 }}>
+          {/* Carrusel de servicio */}
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={1}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            modules={[Autoplay]}
+            style={{
+              borderRadius: "16px",
+              overflow: "hidden",
+              maxWidth: "1400px",
+              margin: "auto",
+            }}
+          >
+            {serviceImages.map((item, index) => (
+              <SwiperSlide key={index}>
+                <Box sx={{ position: "relative" }}>
+                  <Box
+                    component="img"
+                    src={item.image}
+                    alt={item.name}
+                    sx={{
+                      width: "100%",
+                      maxHeight: { xs: "400px", md: "700px" },
+                      objectFit: "contain",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      bottom: 0,
+                      width: "100%",
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      color: "white",
+                      py: 2,
+                      textAlign: "center",
+                    }}
+                  >
+                    <Typography variant="h5" fontWeight="bold">
+                      {item.name}
+                    </Typography>
+                    <Typography variant="body1">{item.description}</Typography>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      href="https://wa.me/2615555634?text=Hola%20vengo%20de%20tu%20página%20web%20y%20necesito%20reparar%20mi%20celular"
+                      startIcon={<WhatsAppIcon />}
+                      sx={{ mt: 1 }}
+                    >
+                      Contactar por WhatsApp
+                    </Button>
+                  </Box>
+                </Box>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          {/* Carrusel de accesorios */}
           <Typography
-            variant="h6"
+            variant="h4"
             align="center"
-            color="textPrimary"
-            paragraph
-            sx={{ marginTop: 4 }}
+            color="white"
+            fontWeight="bold"
+            mt={6}
+            mb={4}
           >
-            Servicio técnico: los mejores presupuestos a los mejores precios,
-            pedi tu presupuesto aqui...!!!
+            Descubre nuestras promociones y accesorios
           </Typography>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              height="200px"
-              width="200px"
-              image="/images/logo de reparacion.jpg"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography
-                variant="h6"
-                align="center"
-                color="textPrimary"
-                paragraph
-                sx={{ marginTop: 4 }}
+          <Carousel
+            autoPlay
+            indicators
+            navButtonsAlwaysVisible
+            animation="slide"
+            sx={{
+              maxWidth: "1200px",
+              margin: "auto",
+              borderRadius: "16px",
+              overflow: "hidden",
+              boxShadow: 6,
+            }}
+          >
+            {promotions.map((item, index) => (
+              <Paper
+                key={index}
+                sx={{
+                  textAlign: "center",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                }}
               >
-                hacemos cambios de modulo,baterias,pines de carga,reparacion de
-                placa,cambio de class,baño quimico y mucho mas...!!!
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions sx={{ justifyContent: "center", mb: 2 }}>
-            <Button
-              variant="contained"
-              color="success"
-              size="large"
-              href="https://wa.me/2615555634?text=hola%20vengo%20de%20tu%20pagina%20web%20necesito%20reparar%20mi%20celular"
-              startIcon={<WhatsAppIcon />}
-            >
-              Servicio técnico
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
-    </Container>
+                <Box
+                  component="img"
+                  src={item.image}
+                  alt={item.alt}
+                  sx={{
+                    width: "100%",
+                    maxHeight: { xs: "400px", md: "700px" },
+                    objectFit: "contain",
+                  }}
+                />
+                <Box sx={{ p: 2, backgroundColor: "rgba(0,0,0,0.5)" }}>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    color="white"
+                    gutterBottom
+                  >
+                    {item.alt}
+                  </Typography>
+                  <Typography variant="body1" color="white" gutterBottom>
+                    {item.description}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    href={item.link}
+                    sx={{ mt: 1 }}
+                  >
+                    Ver más...!!!
+                  </Button>
+                </Box>
+              </Paper>
+            ))}
+          </Carousel>
+        </Container>
+      </Box>
+
+      {/* Footer */}
+      <Box
+        component="footer"
+        sx={{
+          backgroundColor: "#212121",
+          color: "white",
+          py: 3,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold">
+          La Clínica del Celular
+        </Typography>
+        <Typography variant="body1">📞 Teléfono: +54 9 261-777-0900</Typography>
+        <Typography variant="body1">
+          📸 Instagram: @laclinicadelcelular
+        </Typography>
+        <Typography>
+          📍 Ubicación: Calle Catamarca 23, Ciudad de Mendoza, Argentina
+          (Galería Tonsa Apolo 4)
+        </Typography>
+        <Typography variant="body2" mt={1}>
+          © 2025 Todos los derechos reservados
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 
