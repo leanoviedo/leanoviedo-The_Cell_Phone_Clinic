@@ -1,11 +1,23 @@
-import { Container, Typography, Button, Box, Paper } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Button,
+  Box,
+  Paper,
+  Link,
+  Stack,
+} from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 import Carousel from "react-material-ui-carousel";
+import { Link as RouterLink } from "react-router-dom";
 import { promotions, serviceImages } from "../MockData/mock-data.tsx";
+
 const LandingPages = () => {
   return (
     <Box
@@ -124,37 +136,52 @@ const LandingPages = () => {
                 }}
               >
                 <Box
-                  component="img"
-                  src={item.image}
-                  alt={item.alt}
                   sx={{
                     width: "100%",
-                    maxHeight: { xs: "400px", md: "700px" },
-                    objectFit: "contain",
+                    height: { xs: "300px", md: "500px" },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#f5f5f5", // Fondo neutro detrás de la imagen
+                    overflow: "hidden",
                   }}
-                />
-                <Box sx={{ p: 2, backgroundColor: "rgba(0,0,0,0.5)" }}>
-                  <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    color="white"
-                    gutterBottom
+                >
+                  <Box
+                    component={RouterLink}
+                    to={item.link}
+                    sx={{
+                      display: "block",
+                      width: "100%",
+                      height: "100%",
+                      textDecoration: "none",
+                    }}
                   >
-                    {item.alt}
-                  </Typography>
-                  <Typography variant="body1" color="white" gutterBottom>
-                    {item.description}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    href={item.link}
-                    sx={{ mt: 1 }}
-                  >
-                    Ver más...!!!
-                  </Button>
+                    <Box
+                      component="img"
+                      src={item.image}
+                      alt={item.title}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain", // evita cortes
+                        cursor: "pointer", // Cambia el cursor para indicar clic
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.03)", // efecto sutil al pasar el mouse
+                        },
+                      }}
+                    />
+                  </Box>
                 </Box>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  href={item.link}
+                  sx={{ mt: 1 }}
+                >
+                  Ver más...!!!
+                </Button>
               </Paper>
             ))}
           </Carousel>
@@ -167,27 +194,83 @@ const LandingPages = () => {
         sx={{
           backgroundColor: "#212121",
           color: "white",
-          py: 3,
+          py: 4,
+          px: 2,
           textAlign: "center",
         }}
       >
-        <Typography variant="h6" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold" gutterBottom>
           La Clínica del Celular
         </Typography>
-        <Typography variant="body1">📞 Teléfono: +54 9 261-777-0900</Typography>
-        <Typography variant="body1">
-          📸 Instagram: @laclinicadelcelular
-        </Typography>
-        <Typography>
-          📍 Ubicación: Calle Catamarca 23, Ciudad de Mendoza, Argentina
-          (Galería Tonsa Apolo 4)
-        </Typography>
-        <Typography variant="body2" mt={1}>
+
+        <Stack
+          direction="row"
+          spacing={4}
+          justifyContent="center"
+          alignItems="center"
+          flexWrap="wrap"
+          sx={{ mb: 2 }}
+        >
+          {/* Instagram */}
+          <Link
+            href="https://instagram.com/la.clinica.del.celular"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              color: "white",
+              textDecoration: "none",
+              "&:hover": { color: "violet" },
+            }}
+          >
+            <InstagramIcon />
+            Instagram
+          </Link>
+
+          {/* WhatsApp */}
+          <Link
+            href="https://wa.me/2615555634"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              color: "white",
+              textDecoration: "none",
+              "&:hover": { color: "#25D366" },
+            }}
+          >
+            <WhatsAppIcon />
+            WhatsApp
+          </Link>
+
+          {/* Ubicación */}
+          <Link
+            href="https://maps.app.goo.gl/FBmdCqcW2YumcuRo8"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              color: "white",
+              textDecoration: "none",
+              "&:hover": { color: "#f44336" },
+            }}
+          >
+            <LocationOnIcon />
+            Calle Catamarca 23, Mendoza
+          </Link>
+        </Stack>
+
+        <Typography variant="body2">
           © 2025 Todos los derechos reservados
         </Typography>
       </Box>
     </Box>
   );
 };
-
 export default LandingPages;
