@@ -6,14 +6,14 @@ import { AppBar, Toolbar, Box, Container, Button, Avatar } from "@mui/material";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 const menuItems = [
-  { text: "Home", icon: <HomeIcon sx={{ mr: 1 }} />, path: "/" },
+  { text: "inicio", icon: <HomeIcon sx={{ mr: 1 }} />, path: "/" },
   {
-    text: "Accessories",
+    text: "Accesorios",
     icon: <HeadphonesIcon sx={{ mr: 1 }} />,
     path: "/Accessories",
   },
   {
-    text: "Phones",
+    text: "celulares",
     icon: <PhoneAndroidIcon sx={{ mr: 1 }} />,
     path: "/Phones",
   },
@@ -84,19 +84,19 @@ function ResponsiveAppBar() {
               gap: 1,
             }}
           >
-            {menuItems.map((item) => (
+            {menuItems.map((item, index) => (
               <Button
-                key={item.text}
+                key={`${item.text || "item"}-${index}`}
                 component={Link}
                 to={item.path}
                 sx={{
-                  color: "#349eeb", // 🖤 Botones con texto negro
+                  color: "#349eeb",
                   display: "flex",
                   alignItems: "center",
                   textTransform: "none",
                   px: 2,
                   "&:hover": {
-                    backgroundColor: "#f0f0f0", // 🎨 Fondo gris claro al pasar el mouse
+                    backgroundColor: "#f0f0f0",
                   },
                 }}
               >
