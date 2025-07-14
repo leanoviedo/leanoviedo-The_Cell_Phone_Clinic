@@ -1,3 +1,8 @@
+import HomeIcon from "@mui/icons-material/Home";
+import HeadphonesIcon from "@mui/icons-material/Headphones";
+import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 // 📦 Interfaces para tipado
 export interface ServiceImage {
   name: string;
@@ -34,6 +39,23 @@ export interface AccessoriesData {
   pendrive_memories: AccessoryItem[];
 }
 
+export const menuItems = [
+  { text: "Inicio", icon: <HomeIcon />, path: "/" },
+  { text: "Accesorios", icon: <HeadphonesIcon />, path: "/Accessories" },
+  { text: "Celulares", icon: <PhoneAndroidIcon />, path: "/Phones" },
+  {
+    text: "WhatsApp",
+    icon: <WhatsAppIcon sx={{ color: "green" }} />,
+    path: "https://wa.me/2615555634?text=Hola%20vengo%20de%20tu%20página%20web%20y%20necesito%20reparar%20mi%20celular",
+    external: true,
+  },
+  {
+    text: "Instagram",
+    icon: <InstagramIcon sx={{ color: "#E1306C" }} />,
+    path: "http://instagram.com/la.clinica.del.celular/",
+    external: true,
+  },
+];
 // 📦 Datos
 export const accessoriesData: AccessoriesData = {
   auriculares: [
@@ -347,40 +369,39 @@ export const accessoriesData: AccessoriesData = {
     },
   ],
 };
-export const promotions:Promotions[]=[
-   {
-      title: "Pendrive DataTravel ",
-      description: "Pendrive DataTravel 64GB  precio .",
-      image: " /images/imagenes de accesorios/pendrive-DataTravel-64gb.webp",
-      alt: "DataTravel-64GB",
-      link: "/accessories/",
-    },
-        {
-      title: "Joystick  paystation 2",
-      description: "Descripción del joystick 2.",
-      image: "  /images/imagenes de accesorios/yostig-play-2.webp",
-      alt: "joystick 1",
-      link: "/accessories/",
-    },
-    {
-      title: "Auricular E6s",
-      description: "Auricular E6s $8.000",
-      image:
-        "/images/imagenes de accesorios/auriculares/woj29gyehddpkygajr99kxqhj4aqq5sbeeuulxcf1-0fac5175a684525fe316952316847011-1024-1024.webp",
-      alt: "Auricular Alphina F9-5",
-      link: "/accessories/",
-    },
-        {
-      title: "Auricular Samsung S10+",
-      description: "Auricular samsung S10+ Precio $3.500",
-      image:
-        " /images/imagenes de accesorios/auriculares/61c08494a6a4a1-1f8de48ecb0cbbd65516933460314928-1024-1024.webp",
-      alt: "auriculares S10+",
-      link: "/accessories/",
-    },
-
-]
-// export const phoneimages: Phoneimages[] = 
+export const promotions: Promotions[] = [
+  {
+    title: "Pendrive DataTravel ",
+    description: "Pendrive DataTravel 64GB  precio .",
+    image: " /images/imagenes de accesorios/pendrive-DataTravel-64gb.webp",
+    alt: "DataTravel-64GB",
+    link: "/accessories/",
+  },
+  {
+    title: "Joystick  paystation 2",
+    description: "Descripción del joystick 2.",
+    image: "  /images/imagenes de accesorios/yostig-play-2.webp",
+    alt: "joystick 1",
+    link: "/accessories/",
+  },
+  {
+    title: "Auricular E6s",
+    description: "Auricular E6s $8.000",
+    image:
+      "/images/imagenes de accesorios/auriculares/woj29gyehddpkygajr99kxqhj4aqq5sbeeuulxcf1-0fac5175a684525fe316952316847011-1024-1024.webp",
+    alt: "Auricular Alphina F9-5",
+    link: "/accessories/",
+  },
+  {
+    title: "Auricular Samsung S10+",
+    description: "Auricular samsung S10+ Precio $3.500",
+    image:
+      " /images/imagenes de accesorios/auriculares/61c08494a6a4a1-1f8de48ecb0cbbd65516933460314928-1024-1024.webp",
+    alt: "auriculares S10+",
+    link: "/accessories/",
+  },
+];
+// export const phoneimages: Phoneimages[] =
 // samsung: [
 //     {
 //       title: "samsung  ",
@@ -396,7 +417,7 @@ export const promotions:Promotions[]=[
 //       alt: "Samsung",
 //       link: "/phones/samsung/",
 //     },
-  
+
 //     {
 //          title: "samsung  ",
 //       description: "",
