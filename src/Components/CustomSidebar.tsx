@@ -1,51 +1,98 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import HomeIcon from "@mui/icons-material/Home";
-import HeadphonesIcon from "@mui/icons-material/Headphones";
-import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
-import { AppBar, Toolbar, Box, Container, Button, Avatar } from "@mui/material";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-const menuItems = [
-  { text: "inicio", icon: <HomeIcon sx={{ mr: 1 }} />, path: "/" },
-  {
-    text: "Accesorios",
-    icon: <HeadphonesIcon sx={{ mr: 1 }} />,
-    path: "/Accessories",
-  },
-  {
-    text: "celulares",
-    icon: <PhoneAndroidIcon sx={{ mr: 1 }} />,
-    path: "/Phones",
-  },
-  {
-    text: "",
-    icon: <WhatsAppIcon sx={{ mr: 1, color: "green" }} />,
-    path: "/https://wa.me/2615555634?text=Hola%20vengo%20de%20tu%20página%20web%20y%20necesito%20reparar%20mi%20celular",
-  },
-  {
-    text: "",
-    icon: <InstagramIcon sx={{ mr: 1, color: "violet" }} />,
-    path: "/http://instagram.com/la.clinica.del.celular/",
-  },
-];
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Container,
+  Button,
+  Avatar,
+  Typography,
+} from "@mui/material";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import { menuItems } from "../MockData/mock-data.tsx";
 
 function ResponsiveAppBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <Box sx={{ textAlign: "center", mt: 4 }}>
+      <Typography
+        sx={{
+          backgroundColor: "#349eeb",
+          color: "white",
+          fontWeight: "bold",
+          fontSize: "24px",
+          textTransform: "uppercase",
+          letterSpacing: 1,
+          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+          borderBottom: "2px solid #349eeb",
+          paddingY: "12px",
+          mb: 2,
+        }}
+      >
+        Menú
+      </Typography>
+
+      <List>
+        {menuItems.map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton
+              component={item.external ? "a" : Link}
+              to={!item.external ? item.path : undefined}
+              href={item.external ? item.path : undefined}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              sx={{
+                justifyContent: "flex-start",
+                px: 3,
+                py: 2,
+                "&:hover": {
+                  backgroundColor: "#f0f0f0",
+                },
+              }}
+              onClick={handleDrawerToggle}
+            >
+              <ListItemIcon sx={{ minWidth: 40, color: "#349eeb" }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                primaryTypographyProps={{
+                  fontSize: "1.1rem",
+                  fontWeight: 500,
+                  color: "#333",
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "white",
-        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+        background: "#fff",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar
-          disableGutters
-          sx={{
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-          }}
-        >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
           <Box
             component={Link}
             to="/"
@@ -53,60 +100,83 @@ function ResponsiveAppBar() {
               display: "flex",
               alignItems: "center",
               textDecoration: "none",
-              "&:hover": {
-                opacity: 0.8,
-              },
+              color: "#349eeb",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
             }}
           >
             <Avatar
               src="/images/imageslogodog.jpeg"
               alt="logo_Doc"
-              sx={{
-                width: 80,
-                height: 80,
-                mr: 1,
-              }}
+              sx={{ width: 48, height: 48, mr: 1 }}
             />
-            <Box
-              sx={{
-                color: "#349eeb",
-                fontWeight: "bold",
-                fontSize: "24px",
-              }}
-            >
-              La Clinica del Celular
-            </Box>
+            La Clínica del Celular
           </Box>
+
           <Box
             sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 1,
+              display: { xs: "none", md: "flex" },
+              gap: 1.5,
             }}
           >
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               <Button
-                key={`${item.text || "item"}-${index}`}
-                component={Link}
-                to={item.path}
+                key={item.text}
+                component={item.external ? "a" : Link}
+                to={!item.external ? item.path : undefined}
+                href={item.external ? item.path : undefined}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 sx={{
                   color: "#349eeb",
+                  fontWeight: 600,
+                  textTransform: "none",
                   display: "flex",
                   alignItems: "center",
-                  textTransform: "none",
-                  px: 2,
                   "&:hover": {
-                    backgroundColor: "#f0f0f0",
+                    color: "#287bb5",
                   },
                 }}
               >
                 {item.icon}
-                {item.text}
+                <Box sx={{ ml: 0.5 }}>{item.text}</Box>
               </Button>
             ))}
           </Box>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="end"
+            onClick={handleDrawerToggle}
+            sx={{
+              display: { md: "none" },
+              color: mobileOpen ? "#e53935" : "#349eeb",
+              transition: "color 0.3s ease",
+            }}
+          >
+            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+          </IconButton>
         </Toolbar>
       </Container>
+      <Drawer
+        anchor="left"
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: "75%",
+            height: "100vh",
+            boxSizing: "border-box",
+            paddingTop: 2,
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 }
