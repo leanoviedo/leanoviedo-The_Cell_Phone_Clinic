@@ -16,7 +16,8 @@ import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 import Carousel from "react-material-ui-carousel";
 import { Link as RouterLink } from "react-router-dom";
-import { promotions, serviceImages } from "../MockData/mock-data.tsx";
+import { serviceImages } from "../MockData/mock-serviceImages.tsx";
+import { promotions } from "../MockData/mock-promotions.tsx";
 
 const LandingPages = () => {
   return (

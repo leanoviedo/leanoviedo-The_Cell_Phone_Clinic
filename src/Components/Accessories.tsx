@@ -37,7 +37,7 @@ import {
   AddShoppingCart,
   RemoveShoppingCart,
 } from "@mui/icons-material";
-import { accessoriesData } from "../MockData/mock-data";
+import { accessoriesData } from "../MockData/mock-dataAccessories";
 
 type AccessoryItem = {
   title: string;
