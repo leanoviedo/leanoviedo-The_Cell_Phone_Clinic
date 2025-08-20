@@ -55,7 +55,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 12",
         description:
           "Pantalla OLED Super Retina XDR 6.1'', cámara dual 12MP, chip A14 Bionic, 5G, diseño compacto.",
-        image: "public/images/imagenes_de_celulares/iphone12 .jpeg",
+        image:"/images/imagenes_de_celulares/iphone12.jpeg",
         price: 650000,
         storage: "128GB",
         battery: "92%",
@@ -69,7 +69,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 12pro-Max",
         description:
           "Pantalla OLED Super Retina XDR 6.1'', cámara dual 12MP, chip A14 Bionic, 5G, diseño compacto.",
-        image: "public/images/imagenes_de_celulares/iphone12.jpeg",
+        image: "/images/imagenes_de_celulares/iphone12pro.jpeg",
         price: 700000,
         storage: "128GB",
         battery: "100%",
@@ -83,7 +83,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 13",
         description:
           "Pantalla OLED Super Retina XDR 6.1'', cámara dual 12MP con estabilización óptica, chip A15 Bionic, 5G.",
-        image: "public/images/imagenes_de_celulares/iphone13.jpeg",
+        image: "/images/imagenes_de_celulares/iphone13.jpeg",
         price: 690000,
         storage: "128GB",
         battery: "100%",
@@ -97,7 +97,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 13",
         description:
           "Pantalla OLED Super Retina XDR 6.1'', cámara dual 48MP, chip A16 Bionic, USB-C, Dynamic Island.",
-        image: "public/images/imagenes_de_celulares/iphone13azul.jpeg",
+        image: "/images/imagenes_de_celulares/iphone13azul.jpeg",
         price: 650000,
         storage: "128GB",
         battery: "100%",
@@ -111,7 +111,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 13",
         description:
           "Pantalla OLED Super Retina XDR 6.1'', cámara triple 48MP, chip A16 Bionic, USB-C, Dynamic Island.",
-        image: "public/images/imagenes_de_celulares/iphone13rosa.jpeg",
+        image: "/images/imagenes_de_celulares/iphone13rosa.jpeg",
         price: 750000,
         storage: "128GB",
         battery: "100%",
@@ -125,7 +125,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 13pro",
         description:
           "Pantalla OLED Super Retina XDR 6.1'', cámara dual 48MP, chip A16 Bionic, USB-C, Dynamic Island.",
-        image: "public/images/imagenes_de_celulares/iphone13pro.jpeg",
+        image: "/images/imagenes_de_celulares/iphone13pro.jpeg",
         price: 800000,
         storage: "128GB",
         battery: "100%",
@@ -139,7 +139,7 @@ export const phonesData: PhoneData[] = [
         title: "iPhone 13pro-Max ",
         description:
           "Pantalla OLED Super Retina XDR 6.7'', cámara triple 48MP, chip A16 Bionic, USB-C, Dynamic Island.",
-        image: "public/images/imagenes_de_celulares/iphone13proMax-gris.jpeg",
+        image: "/images/imagenes_de_celulares/iphone13proMax-gris.jpeg",
         price: 850000,
         storage: "128GB",
         battery: "100%",
@@ -312,7 +312,7 @@ export const phonesData: PhoneData[] = [
         title: "Samsung Galaxy A16",
         description:
           "Pantalla PLS LCD 6.5'', cámara triple 50MP, batería 5000mAh, procesador MediaTek Helio G80.",
-        image: "public/images/imagenes_de_celulares/Samsung-A16.jpeg",
+        image: "/images/imagenes_de_celulares/Samsung-A16.jpeg",
         price: 280000,
         ram: "4GB",
         storage: "64GB",
@@ -326,7 +326,7 @@ export const phonesData: PhoneData[] = [
         title: "Samsung Galaxy A15",
         description:
           "Pantalla PLS LCD 6.4'', cámara triple 48MP, batería 5000mAh, procesador Exynos 850.",
-        image: "public/images/imagenes_de_celulares/samsung-A15.jpg",
+        image: "/images/imagenes_de_celulares/samsung-A15.jpg",
         price: 240000,
         ram: "4GB",
         storage: "128GB",
@@ -396,7 +396,7 @@ export const phonesData: PhoneData[] = [
         title: "Samsung Galaxy A05",
         description:
           "Pantalla PLS LCD 6.5'', cámara dual 13MP, batería 5000mAh, procesador Unisoc SC9863A.",
-        image: "public/images/imagenes_de_celulares/Samsung-A05.jpeg",
+        image: "/images/imagenes_de_celulares/Samsung-A05.jpeg",
         price: 160000,
         ram: "4GB",
         storage: "128GB",
@@ -410,7 +410,7 @@ export const phonesData: PhoneData[] = [
         title: "Samsung Galaxy A03",
         description:
           "Pantalla PLS LCD 6.5'', cámara dual 48MP, batería 5000mAh, procesador Unisoc T606.",
-        image: "public/images/imagenes_de_celulares/Samsung-A03.jpeg",
+        image: "/images/imagenes_de_celulares/Samsung-A03.jpeg",
         price: 120000,
         ram: "4GB",
         storage: "64GB",
@@ -424,7 +424,7 @@ export const phonesData: PhoneData[] = [
         title: "Samsung Galaxy A03 Core",
         description:
           "Pantalla PLS LCD 6.5'', cámara simple 8MP, batería 5000mAh, procesador Unisoc SC9863A.",
-        image: "public/images/imagenes_de_celulares/Samsung-A03Core.jpeg",
+        image: "/images/imagenes_de_celulares/Samsung-A03Core.jpeg",
         price: 100000,
         ram: "2GB",
         storage: "32GB",
@@ -443,7 +443,7 @@ export const phonesData: PhoneData[] = [
         title: "Motorola E22i",
         description:
           "Pantalla IPS LCD 6.5'', cámara principal 16MP, batería 4000mAh, procesador Unisoc T606.",
-        image: "public/images/imagenes_de_celulares/MotorolaE-22i.jpeg",
+        image: "/images/imagenes_de_celulares/MotorolaE-22i.jpeg",
         price: 110000,
         ram: "4GB",
         storage: "64GB",
@@ -457,7 +457,7 @@ export const phonesData: PhoneData[] = [
         title: "Motorola E22",
         description:
           "Pantalla IPS LCD 6.5'', cámara principal 16MP, batería 4000mAh, procesador Unisoc T606.",
-        image: "public/images/imagenes_de_celulares/Motorola-E22.jpeg",
+        image: "/images/imagenes_de_celulares/Motorola-E22.jpeg",
         price: 150000,
         ram: "4GB",
         storage: "128GB",
@@ -603,7 +603,7 @@ export const phonesData: PhoneData[] = [
         title: "Xiaomi Note 10S",
         description:
           "Pantalla AMOLED 6.47'', cámara cuádruple 64MP, batería 4780mAh, procesador MediaTek Helio G95.",
-        image: "public/images/imagenes_de_celulares/RedmiNote-10s.jpeg",
+        image: "/images/imagenes_de_celulares/RedmiNote-10s.jpeg",
         price: 170000,
         ram: "6GB",
         storage: "128GB",
@@ -721,7 +721,7 @@ export const phonesData: PhoneData[] = [
         title: "LG B220",
         description:
           "Teléfono simple con pantalla LCD 2.4'', teclado físico, radio FM y batería de larga duración.",
-        image: "public/images/imagenes_de_celulares/LG b220.jpeg",
+        image: "/images/imagenes_de_celulares/LG b220.jpeg",
         price: 65000,
         ram: "2GB",
         storage: "32GB",
@@ -735,7 +735,7 @@ export const phonesData: PhoneData[] = [
         title: "MiniSmartphone",
         description:
           "Smartphone compacto con pantalla 3.5'', almacenamiento básico, cámara simple y batería pequeña.",
-        image: "public/images/imagenes_de_celulares/telefonito.jpeg",
+        image: "/images/imagenes_de_celulares/telefonito.jpeg",
         price: 90000,
         ram: "2GB",
         storage: "8GB",

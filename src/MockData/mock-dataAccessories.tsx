@@ -32,8 +32,11 @@ export interface AccessoriesData {
   cables: AccessoryItem[];
   cargador: AccessoryItem[];
   luces: AccessoryItem[];
+  parlantes?: AccessoryItem[];
   joysticks: AccessoryItem[];
   pendrive_memories: AccessoryItem[];
+  computacion: AccessoryItem[];
+  varios: AccessoryItem[];
 }
 export const accessoriesData: AccessoriesData = {
   auriculares: [
@@ -156,6 +159,16 @@ export const accessoriesData: AccessoriesData = {
       link: "/accessories/",
       price: 12000,
     },
+    {
+      id: "auricular-wabe3080-13",
+      title: "auricular  jbl wave 380",
+      description: "Auricular bluethooh jbl wave 380.",
+      image:
+        " /images/imagenes_de_accesorios/auriculares/auricularesjblwave380.jpg",
+      alt: "Auricular wave 380",
+      link: "/accessories/",
+      price: 45000,
+    },
   ],
   RelojSmart: [
     {
@@ -186,6 +199,16 @@ export const accessoriesData: AccessoriesData = {
       alt: "Smart_Band_M7",
       link: "/accessories/",
       price: 10000,
+    },
+    {
+      id: "smart-band-W-H Max7-4",
+      title: "Smart-Band W-H Max7",
+      description:
+        "notificacion de llamadas mensajes control de sueño, ritmo cardiaco modo deporte y mucho mas..!! diferentes colores.",
+      image: " /images/imagenes_de_accesorios/reloojes-smart/relojes-7.jpg",
+      alt: "Smart_Band_M9",
+      link: "/accessories/",
+      price: 25000,
     },
   ],
   cables: [
@@ -250,14 +273,13 @@ export const accessoriesData: AccessoriesData = {
       price: 2000,
     },
   ],
-
   cargador: [
     {
       id: "cargador-motorola-50W-1",
       title: "Cargador Motorola 50 W",
       description: " cargador Samsung 50W 2-tipo C + 2 usb tipo-C.",
       image:
-        " /images/imagenes_de_accesorios/cargador-usb-50w-tipoc+2usb-tipoc.webp",
+        " /images/imagenes_de_accesorios/cargador y adaptadores/cargador-usb-50w-tipoc+2usb-tipoc.webp",
       alt: "cargador Motorola 50W",
       link: "/accessories/",
       price: 8000,
@@ -307,10 +329,69 @@ export const accessoriesData: AccessoriesData = {
       title: "Cargador IBEK 5.8A",
       description: "Cargador Ibek color Negro,Amarrillo,Rosa 5.8A usb-type-C ",
       image:
-        " /images/imagenes_de_accesorios/reloojes-smart/cargador+cable- 5.1ibek.webp.webp",
+        "/images/imagenes_de_accesorios/reloojes-smart/cargador+cable- 5.1ibek.webp.webp",
       alt: "cargador IBEK 5.8A",
       link: "/accessories/",
       price: 7000,
+    },
+  ],
+  parlantes: [
+    {
+      id: "parlantes-1",
+      title: "JBL Flip 6",
+      description: "parlante bluethooh jbl flip 6 ",
+      image: "/images/imagenes_de_accesorios/parlantes/jblflip6.jpg",
+      alt: "parlantes",
+      link: "/accesories/parlantes/",
+      price: 75000,
+    },
+    {
+      id: "parlantes-2",
+      title: "parlante aiwa original",
+      description: "parlante bluethooh Aiwa con iluminacion rgb + correa",
+      image: "/images/imagenes_de_accesorios/parlantes/parlanteaiwa.jpg",
+      alt: "parlante",
+      link: "/accesories/parlantes/",
+      price: 35000,
+    },
+    {
+      id: "parlantes-3",
+      title: "parlante olny ",
+      description: "parlante bluethooh cilindro con iluminacion rgb olny",
+      image:
+        "/images/imagenes_de_accesorios/parlantes/parlantecilindroolny.jpg",
+      alt: "parlante",
+      link: "/accesories/",
+      price: 35000,
+    },
+    {
+      id: "parlantes-4",
+      title: "parlante model kts15-15",
+      description: "parlante bluethoh de 6 pulgadas con microfono",
+      image:
+        "/images/imagenes_de_accesorios/parlantes/parlante-con-migrofono.webp",
+      alt: "parlante_microfono",
+      link: "/accesories/",
+      price: 35000,
+    },
+    {
+      id: "parlantes-5",
+      title: "parlante bluethooh",
+      description: "parlante bluethooh con iluminacion rgb",
+      image:
+        "/images/imagenes_de_accesorios/parlantes/img-20231218-wa0031-1116a9139d74ab9fcc17029200378527-1024-1024.webp",
+      alt: "parlante",
+      link: "/accesories/",
+      price: 35000,
+    },
+    {
+      id: "parlantes-6",
+      title: "",
+      description: "parlante bluethooh rosa rgb con microfono",
+      image: "/images/imagenes_de_accesorios/parlantes/parlante_rosa.jpg",
+      alt: "parlante",
+      link: "/accesories/",
+      price: 35000,
     },
   ],
   luces: [
@@ -318,19 +399,28 @@ export const accessoriesData: AccessoriesData = {
       id: "foco-luz-led-giratorio-1",
       title: "Foco de luz Led giratorio  ",
       description: "foco giratorio luz led.",
-      image: "  /images/imagenes_de_accesorios/luces Let-foco-simole.webp",
+      image: "/images/imagenes_de_accesorios/luces/luces Let-foco-simole.webp",
       alt: "foco led giratorio",
       link: "/accessories/",
-      price: 4000,
+      price: 5000,
     },
     {
       id: "tira-luz-led-RGB-2",
       title: "Tira de Luz led RGB ",
       description: "Tira de luz led  rgb 5 metros con control.",
-      image: "  /images/imagenes_de_accesorios/luz-led-5-metros.webp",
+      image: "  /images/imagenes_de_accesorios/luces/luz-led-5-metros.webp",
       alt: "tira de 5 metros luz LED RGB",
       link: "/accessories/",
-      price: 12000,
+      price: 15000,
+    },
+    {
+      id: "tira-neon-led-RGB-2",
+      title: "Tira de Luz  de Neon RGB ",
+      description: "Tira de luz de neon rgb 5 metros con control.",
+      image: "/images/imagenes_de_accesorios/luces/tiraledneon.jpg",
+      alt: "tira de 5 metros luz Neon RGB",
+      link: "/accessories/",
+      price: 24000,
     },
   ],
   joysticks: [
@@ -338,7 +428,7 @@ export const accessoriesData: AccessoriesData = {
       id: "joystick-playstation-2-1",
       title: "Joystick  paystation 2",
       description: "Descripción del joystick 2.",
-      image: "  /images/imagenes_de_accesorios/yostig-play-2.webp",
+      image: "  /images/imagenes_de_accesorios/joysting/yostig-play-2.webp",
       alt: "joystick Playstation 2",
       link: "/accessories/",
       price: 15000,
@@ -346,9 +436,9 @@ export const accessoriesData: AccessoriesData = {
     {
       id: "joystick-playstation-3-2",
       title: "Joystick  paystation 3",
-      description: "joystick  boubleshock para playstation 4.",
+      description: "joystick boubleshock para playstation 4.",
       image:
-        " /images/imagenes_de_accesorios/p2eowgjjysojdgurw5izhzy69cw1qlcdeegjdhxc1-0a6c5e0298e3dc614e16929963434619-1024-1024.webp",
+        " /images/imagenes_de_accesorios/joysting/p2eowgjjysojdgurw5izhzy69cw1qlcdeegjdhxc1-0a6c5e0298e3dc614e16929963434619-1024-1024.webp",
       alt: "joystick Playstation 3",
       link: "/accessories/",
       price: 20000,
@@ -357,10 +447,29 @@ export const accessoriesData: AccessoriesData = {
       id: "joystick-playstation-4-3",
       title: "Joystick  paystation 4",
       description: " joystick  boubleshock para playstation 4.",
-      image: " /images/imagenes_de_accesorios/Josting-sin-nombre-play4.webp",
+      image:
+        " /images/imagenes_de_accesorios/joysting/Josting-sin-nombre-play4.webp",
       alt: "joystick Playstation 4",
       link: "/accessories/",
       price: 35000,
+    },
+    {
+      id: "joystick-playstation-5-4",
+      title: "Joystick  paystation 5",
+      description: " joystick  boubleshock para playstation 5.",
+      image: "/images/imagenes_de_accesorios/joysting/joystick-ps5.jpg",
+      alt: "joystick Playstation 5",
+      link: "/accessories/",
+      price: 50000,
+    },
+    {
+      id: "joystick-pc-5",
+      title: "Joystick PC Ucom",
+      description: "Joystick-pc-usb.",
+      image: "/images/imagenes_de_accesorios/joysting/joystingpc.jpg",
+      alt: "joystick Xbox One",
+      link: "/accessories/",
+      price: 25000,
     },
   ],
   pendrive_memories: [
@@ -368,7 +477,8 @@ export const accessoriesData: AccessoriesData = {
       id: "memoria-sandisk-64GB-1",
       title: "Memoria SanDisk ",
       description: "Memoria SanDisk de 64GB",
-      image: "  /images/imagenes_de_accesorios/Memories-SanDisk-64Gb .webp",
+      image:
+        "  /images/imagenes_de_accesorios/pendrive-memorias/Memories-SanDisk-64Gb .webp",
       alt: "memoria SanDisk 64GB",
       link: "/accessories/",
       price: 13000,
@@ -377,7 +487,8 @@ export const accessoriesData: AccessoriesData = {
       id: "memoria-sandisk-128GB-2",
       title: "Memoria SanDisk ",
       description: "Memoria SanDisk ultra 128GB.",
-      image: "  /images/imagenes_de_accesorios/MenoriasSanDisk128GB.webp",
+      image:
+        "  /images/imagenes_de_accesorios/pendrive-memorias/MenoriasSanDisk128GB.webp",
       alt: "memoria SanDisk 128GB",
       link: "/accessories/",
       price: 25000,
@@ -386,7 +497,8 @@ export const accessoriesData: AccessoriesData = {
       id: "pendrive-datatraveller-128GB-3",
       title: "Pendrive DataTravel ",
       description: "Pendrive DataTravel 128GB ",
-      image: " /images/imagenes_de_accesorios/Pendrive-DataTravel-128GB.webp",
+      image:
+        " /images/imagenes_de_accesorios/pendrive-memorias/Pendrive-DataTravel-128GB.webp",
       alt: "pendrive DataTravel 128GB",
       link: "/accessories/",
       price: 20000,
@@ -395,7 +507,8 @@ export const accessoriesData: AccessoriesData = {
       id: "pendrive-sandisk-8GB-4",
       title: "Pendrive SandDisk ",
       description: " Pendrive SandDisk 8GB",
-      image: "  /images/imagenes_de_accesorios/pendrive- SanDisk-8GB.webp",
+      image:
+        "  /images/imagenes_de_accesorios/pendrive-memorias/pendrive- SanDisk-8GB.webp",
       alt: "pendrive SanDisk 8GB",
       link: "/accessories/",
       price: 5000,
@@ -404,7 +517,8 @@ export const accessoriesData: AccessoriesData = {
       id: "pendrive-sandisk-64GB-5",
       title: "Pendrive SandDisk ",
       description: " Pendrive SandDisk 64GB",
-      image: "  /images/imagenes_de_accesorios/sanDIsk-64GB.webp",
+      image:
+        "  /images/imagenes_de_accesorios/pendrive-memorias/sanDIsk-64GB.webp",
       alt: "pendrive SanDisk 64GB",
       link: "/accessories/",
       price: 15000,
@@ -413,10 +527,158 @@ export const accessoriesData: AccessoriesData = {
       id: "pendrive-datatraveller-64GB-6",
       title: "Pendrive DataTravel ",
       description: "Pendrive DataTravel 64GB",
-      image: " /images/imagenes_de_accesorios/pendrive-DataTravel-64gb.webp",
+      image:
+        " /images/imagenes_de_accesorios/pendrive-memorias/pendrive-DataTravel-64gb.webp",
       alt: "pendrive DataTravel 64GB",
       link: "/accessories/",
       price: 12000,
+    },
+  ],
+  computacion: [
+    {
+      id: "mouse-inalambrico-1",
+      title: "mouse inalambrico",
+      description: "mouse imalambrico tipo C recargable  con rgb.",
+      image: "/images/imagenes_de_accesorios/computacion /mouseinalambrico.jpg",
+      alt: "varios accesorios",
+      link: "/accessories/",
+      price: 18000,
+    },
+    {
+      id: "Teclado-inalambrico-2",
+      title: "teclado inalambrico con rgb",
+      description: "teclado gamer inalambrico con rgb.",
+      image: "/images/imagenes_de_accesorios/computacion /teclado-gamer.jpeg",
+      alt: "teclado inalambrico",
+      link: "/accessories/",
+      price: 19500,
+    },
+    {
+      id: "cargador-universal-timeC-3",
+      title: "cargador-universal PC-time ",
+      description: "cargador para notbook universal time hasta 24 wats.",
+      image:
+        "/images/imagenes_de_accesorios/computacion /cargador-universal-pc.jpeg",
+      alt: "varios accesorios",
+      link: "/accessories/",
+      price: 20000,
+    },
+    {
+      id: "cargador-universal-dinaxC-4",
+      title: "cargador-universal PC-dinax",
+      description: "cargador para notbook universal dinax hasta 24 wats.",
+      image:
+        "/images/imagenes_de_accesorios/computacion /cargador-universal-dinax.jpg",
+      alt: "varios accesorios",
+      link: "/accessories/",
+      price: 20000,
+    },
+
+    {
+      id: "adaptador-OTG-5",
+      title: "Adaptador OTG tipo C",
+      description: "adaptador otg tipo c a usd.",
+      image: "/images/imagenes_de_accesorios/computacion /adaptadorotg+c.webp",
+      alt: "varios accesorios",
+      link: "/accessories/",
+      price: 5000,
+    },
+    {
+      id: "adaptador-OTG-6",
+      title: "Adaptador OTG tipo V8",
+      description: "adaptador otg tipo v8 a usb.",
+      image: "/images/imagenes_de_accesorios/computacion /adaptadorotgv8.webp",
+      alt: "varios accesorios",
+      link: "/accessories/",
+      price: 5000,
+    },
+    {
+      id: "cable-red-ethernet-7",
+      title: "Cable de red Ethernet",
+      description: "Cable de red Ethernet 5 metros.",
+      image: "/images/imagenes_de_accesorios/computacion /cables-de-red.jpeg",
+      alt: "cable de red Ethernet",
+      link: "/accessories/",
+      price: 7000,
+    },
+  ],
+
+  varios: [
+    {
+      id: "varios-1",
+      title: "tvbox HEVIC android 6K",
+      description:
+        "Tvbox 6K android con control + hdmi almacenamiento 512Gb/ram 32Gb.",
+      image: "/images/imagenes_de_accesorios/tv-box-6k.jpeg",
+      alt: "balanza gramera digital",
+      link: "/accessories/",
+      price: 60000,
+    },
+    {
+      id: "varios-2",
+      title: "balanza Dinax",
+      description: "balanza gramera digital dinax .",
+      image: "/images/imagenes_de_accesorios/balanza-granera-dinax.webp",
+      alt: "balanza gramera digital",
+      link: "/accessories/",
+      price: 12000,
+    },
+    {
+      id: "varios-3",
+      title: "soporte fijo para TV ",
+      description: "soporte fijo para tv de 14 a 42.",
+      image: "/images/imagenes_de_accesorios/soporte-para-pared40-80.jpg",
+      alt: "soporte fijo para TV",
+      link: "/accessories/",
+      price: 14500,
+    },
+    {
+      id: "varios-4",
+      title: "soporte fijo para TV ",
+      description: "soporte fijo para tv de 40 a 80.",
+      image:
+        "/images/imagenes_de_accesorios/cb51e13b-9515-4322-8c45-d06f4faa43df.jpg",
+      alt: "soporte fijo para TV",
+      link: "/accessories/",
+      price: 18000,
+    },
+    {
+      id: "varios-5",
+      title: "adaptador de corriente universal",
+      description: "adaptador de corriente universal.",
+      image:
+        "/images/imagenes_de_accesorios/computacion /adaptador-2-patas.webp",
+      alt: "adaptador de corriente universal",
+      link: "/accessories/",
+      price: 5000,
+    },
+    {
+      id: "varios-6",
+      title: "cables de rca ",
+      description: "cable de rca de 1 metro .",
+      image: "/images/imagenes_de_accesorios/cables-rca.jpg",
+      alt: "cables de rca",
+      link: "/accessories/",
+      price: 6000,
+    },
+    {
+      id: "varios-7",
+      title: "adaptador de vga a hdmi",
+      description: "adaptador de vga a hdmi.",
+      image:
+        "/images/imagenes_de_accesorios/computacion /adaptador-vga-hdmi.webp",
+      alt: "adaptador de vga a hdmi",
+      link: "/accessories/",
+      price: 8000,
+    },
+    {
+      id: "varios-8",
+      title: "adaptador de rca a hdmi",
+      description: "adaptador de rca a hdmi.",
+      image: "/images/imagenes_de_accesorios/adaptador-rca-hdmi.jpg",
+      alt: "adaptador de rca a hdmi",
+      link: "/accessories/",
+      price: 7500,
     },
   ],
 };

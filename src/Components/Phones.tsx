@@ -171,7 +171,7 @@ const Phones: React.FC = () => {
     <Container sx={{ mt: 4, mb: 6 }}>
       {/* Header y carrito */}
       <Stack direction="row" justifyContent="space-between" mb={2}>
-        <Typography variant="h2" color="primary" fontWeight={"bold"}>
+        <Typography variant="h4" color="primary" fontWeight={"bold"}>
           Celulares
         </Typography>
         <IconButton color="primary" onClick={() => setCartOpen(true)}>
