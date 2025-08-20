@@ -154,8 +154,8 @@ const Accessories: React.FC = () => {
   return (
     <Container sx={{ mt: 4, mb: 6 }}>
       <Stack direction="row" justifyContent="space-between" mb={2}>
-        <Typography variant="h3" color="primary">
-          Accesorios para celulares
+        <Typography variant="h4" color="primary" fontWeight={"bold"}>
+          Accesorios
         </Typography>
         <IconButton color="primary" onClick={() => setCartOpen(true)}>
           <Badge badgeContent={totalCartQuantity} color="secondary">

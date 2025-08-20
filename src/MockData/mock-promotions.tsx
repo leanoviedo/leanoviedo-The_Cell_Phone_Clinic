@@ -7,16 +7,24 @@ export interface Promotions {
 }
 export const promotions: Promotions[] = [
   {
+    title: "tvbox HEVIC android 6K",
+    description: "tv box android HEVIC 6K ",
+    image: "/images/imagenes_de_accesorios/tv-box-6k.jpeg",
+    alt: "tv box android HEVIC 6K",
+    link: "/accessories/alt",
+  },
+  {
     title: "Pendrive DataTravel ",
     description: "Pendrive DataTravel 64GB  precio .",
-    image: " /images/imagenes_de_accesorios/pendrive-DataTravel-64gb.webp",
+    image:
+      " /images/imagenes_de_accesorios/pendrive-memorias/pendrive-DataTravel-64gb.webp",
     alt: "DataTravel-64GB",
     link: "/accessories/",
   },
   {
     title: "Joystick  paystation 2",
     description: "Descripción del joystick 2.",
-    image: "  /images/imagenes_de_accesorios/yostig-play-2.webp",
+    image: "  /images/imagenes_de_accesorios/joysting/yostig-play-2.webp",
     alt: "joystick 1",
     link: "/accessories/",
   },
