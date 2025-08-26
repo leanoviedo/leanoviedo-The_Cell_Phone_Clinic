@@ -1,9 +1,5 @@
-// src/components/Layout.tsx
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   AppBar,
   Toolbar,
@@ -14,44 +10,54 @@ import {
   Typography,
   Link as MuiLink,
   Stack,
+  Drawer,
+  IconButton,
+  Badge,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
 } from "@mui/material";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { menuItems } from "../MockData/mock-nadvar-types";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
+import { menuItems } from "../MockData/mock-nadvar-types";
+import { useSelector } from "react-redux";
+import { selectCartTotalQuantity } from "../redux/selectors/cartSelectors";
+import CartShopping from "./CartShopping";
+
 function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleCartToggle = () => setCartOpen(!cartOpen);
+  const totalQuantity = useSelector(selectCartTotalQuantity);
   const drawer = (
     <Box sx={{ textAlign: "center", mt: 4 }}>
       <Typography
         sx={{
-          backgroundColor: "#349eeb",
-          color: "white",
-          fontWeight: "bold",
-          fontSize: "24px",
-          textTransform: "uppercase",
-          letterSpacing: 1,
-          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
-          borderBottom: "2px solid #349eeb",
-          paddingY: "12px",
-          mb: 2,
+          width: "100%",
+          color: "rgba(25, 118, 210, 1)",
+          fontWeight: 700,
+          fontSize: "1.5rem",
+          py: 1.5,
+          px: 2,
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8,
+          textAlign: "center",
+          letterSpacing: 0.5,
         }}
       >
         Menú
       </Typography>
-
+      <Divider sx={{ my: 2 }} />
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
@@ -61,15 +67,13 @@ function Layout() {
               href={item.external ? item.path : undefined}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
+              onClick={handleDrawerToggle}
               sx={{
-                justifyContent: "flex-start",
                 px: 3,
                 py: 2,
-                "&:hover": {
-                  backgroundColor: "#f0f0f0",
-                },
+                borderRadius: 1,
+                "&:hover": { bgcolor: "rgba(52,158,235,0.1)" },
               }}
-              onClick={handleDrawerToggle}
             >
               <ListItemIcon sx={{ minWidth: 40, color: "#349eeb" }}>
                 {item.icon}
@@ -91,16 +95,14 @@ function Layout() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      {/* 🔝 Navbar */}
+      {/* Navbar */}
       <AppBar
         position="static"
-        sx={{
-          background: "#fff",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        }}
+        sx={{ background: "#fff", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
       >
         <Container maxWidth="xl">
           <Toolbar sx={{ justifyContent: "space-between" }}>
+            {/* Logo */}
             <Box
               component={Link}
               to="/"
@@ -121,11 +123,12 @@ function Layout() {
               La Clínica del Celular
             </Box>
 
-            {/* Botones menú desktop */}
+            {/* Desktop menu */}
             <Box
               sx={{
                 display: { xs: "none", md: "flex" },
-                gap: 1.5,
+                gap: 2,
+                alignItems: "center",
               }}
             >
               {menuItems.map((item) => (
@@ -144,6 +147,8 @@ function Layout() {
                     alignItems: "center",
                     "&:hover": {
                       color: "#287bb5",
+                      bgcolor: "rgba(52,158,235,0.05)",
+                      borderRadius: 1,
                     },
                   }}
                 >
@@ -151,32 +156,99 @@ function Layout() {
                   <Box sx={{ ml: 0.5 }}>{item.text}</Box>
                 </Button>
               ))}
+
+              {/* Carrito desktop */}
+              <IconButton
+                color="primary"
+                onClick={handleCartToggle}
+                sx={{
+                  borderRadius: 2,
+                  bgcolor: "rgba(52,158,235,0.1)",
+                  "&:hover": { bgcolor: "rgba(52,158,235,0.2)" },
+                  p: 1,
+                }}
+              >
+                <Badge
+                  badgeContent={totalQuantity}
+                  color="error"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      fontSize: "0.7rem",
+                      minWidth: 18,
+                      height: 18,
+                      top: 4,
+                      right: 4,
+                    },
+                  }}
+                >
+                  <ShoppingCartIcon fontSize="medium" />
+                </Badge>
+              </IconButton>
             </Box>
 
-            {/* Botón menú móvil */}
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="end"
-              onClick={handleDrawerToggle}
+            {/* Mobile buttons */}
+            <Box
               sx={{
-                display: { md: "none" },
-                color: mobileOpen ? "#e53935" : "#349eeb",
-                transition: "color 0.3s ease",
+                display: { xs: "flex", md: "none" },
+                gap: 1,
+                alignItems: "center",
               }}
             >
-              {mobileOpen ? <CloseIcon /> : <MenuIcon />}
-            </IconButton>
+              {/* Carrito mobile */}
+              <IconButton
+                color="primary"
+                onClick={handleCartToggle}
+                sx={{
+                  borderRadius: "50%",
+                  bgcolor: "rgba(52,158,235,0.1)",
+                  "&:hover": { bgcolor: "rgba(52,158,235,0.2)" },
+                  p: 1,
+                }}
+              >
+                <Badge
+                  badgeContent={totalQuantity}
+                  color="error"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      fontSize: "0.65rem",
+                      minWidth: 16,
+                      height: 16,
+                      top: 2,
+                      right: 2,
+                    },
+                  }}
+                >
+                  <ShoppingCartIcon fontSize="medium" />
+                </Badge>
+              </IconButton>
+
+              {/* Menu mobile */}
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="end"
+                onClick={handleDrawerToggle}
+                sx={{
+                  color: mobileOpen ? "#e53935" : "#349eeb",
+                  transition: "color 0.3s ease",
+                }}
+              >
+                {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
+
+        {/* Cart drawer */}
+        <CartShopping open={cartOpen} onClose={() => setCartOpen(false)} />
+
+        {/* Drawer mobile */}
         <Drawer
           anchor="left"
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
+          ModalProps={{ keepMounted: true }}
           sx={{
             "& .MuiDrawer-paper": {
               width: "75%",
@@ -190,12 +262,12 @@ function Layout() {
         </Drawer>
       </AppBar>
 
-      {/* 🧩 Contenido dinámico */}
+      {/* Main content */}
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Outlet />
       </Box>
 
-      {/* 🔻 Footer */}
+      {/* Footer */}
       <Box
         component="footer"
         sx={{
@@ -209,7 +281,6 @@ function Layout() {
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           La Clínica del Celular
         </Typography>
-
         <Stack
           direction="row"
           spacing={4}
@@ -218,7 +289,6 @@ function Layout() {
           flexWrap="wrap"
           sx={{ mb: 2 }}
         >
-          {/* Instagram */}
           <MuiLink
             href="https://instagram.com/la.clinica.del.celular"
             target="_blank"
@@ -232,11 +302,8 @@ function Layout() {
               "&:hover": { color: "violet" },
             }}
           >
-            <InstagramIcon />
-            Instagram
+            <InstagramIcon /> Instagram
           </MuiLink>
-
-          {/* WhatsApp */}
           <MuiLink
             href="https://wa.me/2615555634"
             target="_blank"
@@ -250,11 +317,8 @@ function Layout() {
               "&:hover": { color: "#25D366" },
             }}
           >
-            <WhatsAppIcon />
-            WhatsApp
+            <WhatsAppIcon /> WhatsApp
           </MuiLink>
-
-          {/* Ubicación */}
           <MuiLink
             href="https://maps.app.goo.gl/FBmdCqcW2YumcuRo8"
             target="_blank"
@@ -268,16 +332,13 @@ function Layout() {
               "&:hover": { color: "#f44336" },
             }}
           >
-            <LocationOnIcon />
-            Calle Catamarca 23, Mendoza
+            <LocationOnIcon /> Calle Catamarca 23, Mendoza
           </MuiLink>
         </Stack>
-
         <Typography variant="body2">
           © 2025 Todos los derechos reservados
         </Typography>
       </Box>
-      {/* <Footer /> */}
     </Box>
   );
 }

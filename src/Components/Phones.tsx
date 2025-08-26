@@ -17,7 +17,6 @@ import {
   Fade,
   Stack,
   IconButton,
-  Badge,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -28,7 +27,6 @@ import {
 import {
   Search,
   ClearAll,
-  ShoppingCart,
   Delete,
   Add,
   Remove,
@@ -38,20 +36,18 @@ import {
 } from "@mui/icons-material";
 
 import { phonesData, PhoneItem } from "../MockData/type-data-phones.tsx";
-
-type CartItem = {
-  item: PhoneItem;
-  quantity: number;
-};
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store.tsx";
+import { addToCart, removeFromCart, removeItem } from "../redux/cartSlice";
 
 const Phones: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [selectedPhone, setSelectedPhone] = useState<PhoneItem | null>(null);
-
+  const cartItems = useSelector((state: RootState) => state.cart.phones);
+  const dispatch = useDispatch();
   // Resalta texto buscado (con keys para fragmentos)
   const highlightText = (text: string, query: string) => {
     if (!query || query.trim().length < 3) return text;
@@ -88,40 +84,18 @@ const Phones: React.FC = () => {
     setSearchQuery("");
   };
 
-  // Añadir al carrito
-  const addToCart = (item: PhoneItem) =>
-    setCartItems((prev) => {
-      const exists = prev.find((p) => p.item.id === item.id);
-      if (exists) {
-        return prev.map((p) =>
-          p.item.id === item.id ? { ...p, quantity: p.quantity + 1 } : p
-        );
-      }
-      return [...prev, { item, quantity: 1 }];
-    });
+  const handleAddToCart = (item: PhoneItem) =>
+    dispatch(addToCart({ ...item, type: "phone" }));
 
-  // Quitar del carrito
-  const removeFromCart = (item: PhoneItem) =>
-    setCartItems((prev) =>
-      prev
-        .map((p) =>
-          p.item.id === item.id ? { ...p, quantity: p.quantity - 1 } : p
-        )
-        .filter((p) => p.quantity > 0)
-    );
+  const handleRemoveFromCart = (item: PhoneItem) =>
+    dispatch(removeFromCart({ ...item, type: "phone" }));
 
-  // Vaciar carrito
-  // const clearCart = () => setCartItems([]);
+  const handleRemoveItem = (item: PhoneItem) =>
+    dispatch(removeItem({ ...item, type: "phone" }));
 
-  // Obtener cantidad de item en carrito
   const getItemQuantity = (item: PhoneItem) =>
     cartItems.find((p) => p.item.id === item.id)?.quantity ?? 0;
 
-  // Total cantidad y precio en carrito (memoizados)
-  const totalCartQuantity = useMemo(
-    () => cartItems.reduce((acc, p) => acc + p.quantity, 0),
-    [cartItems]
-  );
   const totalCartPrice = useMemo(
     () =>
       cartItems.reduce((acc, p) => acc + (p.item.price ?? 0) * p.quantity, 0),
@@ -174,11 +148,6 @@ const Phones: React.FC = () => {
         <Typography variant="h4" color="primary" fontWeight={"bold"}>
           Celulares
         </Typography>
-        <IconButton color="primary" onClick={() => setCartOpen(true)}>
-          <Badge badgeContent={totalCartQuantity} color="secondary">
-            <ShoppingCart fontSize="large" />
-          </Badge>
-        </IconButton>
       </Stack>
 
       <Grid container spacing={2}>
@@ -274,7 +243,7 @@ const Phones: React.FC = () => {
               </Grid>
             ) : (
               filteredPhones.map((phone) => (
-                <Fade in key={phone.id} timeout={500}>
+                <Fade in timeout={500} key={phone.id || phone.title}>
                   <Grid item xs={12} sm={6} md={4}>
                     <Card
                       sx={{
@@ -390,15 +359,25 @@ const Phones: React.FC = () => {
                           size="small"
                           variant="outlined"
                           onClick={() => handleCardClick(phone)}
+                          sx={{
+                            color: "#084f96ff", // texto verde
+                            borderColor: "#1976d3", // borde verde
+                            "&:hover": {
+                              backgroundColor: "#1882ecff", // fondo verde al hover
+                              color: "#fff", // texto blanco al hover
+                            },
+                          }}
                         >
                           Ver más
                         </Button>
+
+                        {/* CONTADOR DE CANTIDAD */}
                         <Stack direction="row" spacing={1} alignItems="center">
-                          <Tooltip title="Quitar del carrito">
+                          <Tooltip title="Quitar unidad">
                             <span>
                               <IconButton
                                 size="small"
-                                onClick={() => removeFromCart(phone)}
+                                onClick={() => handleRemoveFromCart(phone)}
                                 disabled={getItemQuantity(phone) === 0}
                                 color="error"
                               >
@@ -406,12 +385,23 @@ const Phones: React.FC = () => {
                               </IconButton>
                             </span>
                           </Tooltip>
-                          <Typography>{getItemQuantity(phone)}</Typography>
-                          <Tooltip title="Añadir al carrito">
+
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              minWidth: 24,
+                              textAlign: "center",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {getItemQuantity(phone)}
+                          </Typography>
+
+                          <Tooltip title="Agregar unidad">
                             <IconButton
                               size="small"
-                              onClick={() => addToCart(phone)}
-                              color="primary"
+                              onClick={() => handleAddToCart(phone)}
+                              color="success"
                             >
                               <AddShoppingCart />
                             </IconButton>
@@ -507,13 +497,16 @@ const Phones: React.FC = () => {
                     </strong>
                   </Typography>
 
-                  <Box mt={2}>
+                  <Box mt={3} display="flex" justifyContent="flex-start">
                     <Button
                       variant="contained"
-                      color="primary"
-                      href={selectedPhone.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      color="success"
+                      fullWidth
+                      size="large"
+                      onClick={() => {
+                        handleAddToCart(selectedPhone);
+                        setOpen(false); // opcional: cierra el modal después de agregar
+                      }}
                     >
                       Comprar ahora
                     </Button>
@@ -528,48 +521,50 @@ const Phones: React.FC = () => {
       {/* Modal carrito */}
       <Dialog open={cartOpen} onClose={() => setCartOpen(false)} maxWidth="sm">
         <DialogContent dividers sx={{ pt: 6 }}>
-          {cartItems.length === 0 ? (
+          {cartItems.filter(({ item }) => item.type === "phone").length ===
+          0 ? (
             <Typography align="center" color="text.secondary">
-              No hay productos en el carrito.
+              No hay celulares en el carrito.
             </Typography>
           ) : (
             <>
-              {cartItems.map(({ item, quantity }) => (
-                <Box
-                  key={item.id}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mb={2}
-                >
-                  <Typography>
-                    {item.title} (x{quantity})
-                  </Typography>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <IconButton
-                      size="small"
-                      onClick={() => removeFromCart(item)}
-                    >
-                      <Remove />
-                    </IconButton>
-                    <IconButton size="small" onClick={() => addToCart(item)}>
-                      <Add />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() =>
-                        setCartItems((prev) =>
-                          prev.filter((p) => p.item.id !== item.id)
-                        )
-                      }
-                      aria-label={`Eliminar ${item.title} del carrito`}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              ))}
+              {cartItems
+                .filter(({ item }) => item.type === "phone") // solo celulares
+                .map(({ item, quantity }) => (
+                  <Box
+                    key={item.id}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={2}
+                  >
+                    <Typography>
+                      {item.title} (x{quantity})
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleRemoveFromCart(item as PhoneItem)}
+                        disabled={quantity === 0}
+                      >
+                        <Remove />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleAddToCart(item as PhoneItem)}
+                      >
+                        <Add />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => handleRemoveItem(item as PhoneItem)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Stack>
+                  </Box>
+                ))}
               <Divider sx={{ my: 2 }} />
               <Typography
                 variant="h6"
