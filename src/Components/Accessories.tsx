@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+// src/components/Accessories.tsx
+import React, { useMemo, useState } from "react";
 import {
   Container,
   Typography,
@@ -10,57 +11,51 @@ import {
   CardActions,
   Grid,
   Box,
-  Dialog,
-  DialogContent,
   TextField,
   InputAdornment,
   Fade,
   Stack,
   IconButton,
-  Badge,
+  Tooltip,
   Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
-  DialogActions,
-  Tooltip,
-  Divider,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
 import {
   Search,
   ClearAll,
-  ShoppingCart,
-  Delete,
-  Add,
-  Remove,
-  Close,
   AddShoppingCart,
   RemoveShoppingCart,
+  Close,
 } from "@mui/icons-material";
 import { accessoriesData } from "../MockData/mock-dataAccessories";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../redux/store";
+import { addToCart, removeFromCart } from "../redux/cartSlice";
 
 type AccessoryItem = {
+  id?: string;
   title: string;
   description: string;
   image: string;
   alt: string;
   link: string;
-  id?: string;
   price?: number;
 };
 
-type CartItem = {
-  item: AccessoryItem;
-  quantity: number;
-};
-
 const Accessories: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogProduct, setDialogProduct] = useState<AccessoryItem | null>(
+    null
+  );
+
+  const cartItems = useSelector((state: RootState) => state.cart.accessories);
+  const dispatch = useDispatch<AppDispatch>();
 
   const highlightText = (text: string, query: string) =>
     !query
@@ -78,11 +73,6 @@ const Accessories: React.FC = () => {
           )
         );
 
-  const handleCardClick = (image: string) => {
-    setSelectedImage(image);
-    setOpen(true);
-  };
-
   const handleCategoryToggle = (category: string) =>
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -95,41 +85,28 @@ const Accessories: React.FC = () => {
     setSearchQuery("");
   };
 
-  const addToCart = (item: AccessoryItem) =>
-    setCartItems((prev) => {
-      const exists = prev.find((p) => p.item.title === item.title);
-      return exists
-        ? prev.map((p) =>
-            p.item.title === item.title ? { ...p, quantity: p.quantity + 1 } : p
-          )
-        : [...prev, { item, quantity: 1 }];
-    });
+  const handleAddToCart = (item: AccessoryItem) =>
+    dispatch(addToCart({ ...item, type: "accessory" }));
 
-  const removeFromCart = (item: AccessoryItem) =>
-    setCartItems((prev) =>
-      prev
-        .map((p) =>
-          p.item.title === item.title ? { ...p, quantity: p.quantity - 1 } : p
-        )
-        .filter((p) => p.quantity > 0)
-    );
-
-  const clearCart = () => setCartItems([]);
+  const handleRemoveFromCart = (item: AccessoryItem) =>
+    dispatch(removeFromCart({ ...item, type: "accessory" }));
 
   const getItemQuantity = (item: AccessoryItem) =>
-    cartItems.find((p) => p.item.title === item.title)?.quantity ?? 0;
+    cartItems.find(
+      (p) =>
+        p.item.type === "accessory" &&
+        p.item.title.toLowerCase() === item.title.toLowerCase()
+    )?.quantity ?? 0;
 
-  const totalCartQuantity = useMemo(
-    () => cartItems.reduce((acc, p) => acc + p.quantity, 0),
-    [cartItems]
-  );
+  const handleOpenDialog = (product: AccessoryItem) => {
+    setDialogProduct(product);
+    setOpenDialog(true);
+  };
 
-  const totalCartPrice = useMemo(() => {
-    return cartItems.reduce(
-      (acc, p) => acc + (p.item.price ?? 0) * p.quantity,
-      0
-    );
-  }, [cartItems]);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setDialogProduct(null);
+  };
 
   const filteredProducts = useMemo(() => {
     const allProducts = Object.entries(accessoriesData)
@@ -153,29 +130,17 @@ const Accessories: React.FC = () => {
 
   return (
     <Container sx={{ mt: 4, mb: 6 }}>
+      {/* Header */}
       <Stack direction="row" justifyContent="space-between" mb={2}>
-        <Typography variant="h4" color="primary" fontWeight={"bold"}>
+        <Typography variant="h4" color="primary" fontWeight="bold">
           Accesorios
         </Typography>
-        <IconButton color="primary" onClick={() => setCartOpen(true)}>
-          <Badge badgeContent={totalCartQuantity} color="secondary">
-            <ShoppingCart fontSize="large" />
-          </Badge>
-        </IconButton>
       </Stack>
 
       <Grid container spacing={2}>
         {/* Sidebar */}
         <Grid item xs={12} md={3}>
-          {/* Buscador */}
-          <Box
-            mb={2}
-            sx={{
-              boxShadow: 1,
-              borderRadius: 2,
-              p: 1,
-            }}
-          >
+          <Box mb={2} sx={{ boxShadow: 1, borderRadius: 2, p: 1 }}>
             <TextField
               label="Buscar accesorios"
               variant="standard"
@@ -192,15 +157,14 @@ const Accessories: React.FC = () => {
             />
           </Box>
 
-          {/* Filtros */}
           <Box
             p={2}
             border="1px solid #ddd"
             borderRadius={2}
             sx={{ boxShadow: 1, mb: 4 }}
           >
-            <Typography variant="h5" gutterBottom>
-              Filtrar búsqueda
+            <Typography variant="h6" gutterBottom>
+              Filtrar por categoría
             </Typography>
             <FormControl component="fieldset">
               <FormGroup>
@@ -220,6 +184,7 @@ const Accessories: React.FC = () => {
                 ))}
               </FormGroup>
             </FormControl>
+
             <Stack direction="row" justifyContent="flex-end" mt={2}>
               <Button
                 size="small"
@@ -264,42 +229,60 @@ const Accessories: React.FC = () => {
                   <Grid item xs={12} sm={6} md={4}>
                     <Card
                       sx={{
-                        maxWidth: 345,
-                        height: "100%",
                         display: "flex",
                         flexDirection: "column",
-                        boxShadow: 3,
+                        height: "100%",
                         borderRadius: 3,
-                        "&:hover": { transform: "scale(1.03)" },
-                        transition: "transform 0.2s",
+                        boxShadow: 2,
+                        transition: "transform 0.25s ease-in-out",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          boxShadow: 5,
+                        },
                       }}
                     >
-                      <CardActionArea
-                        onClick={() => handleCardClick(product.image)}
-                      >
+                      <CardActionArea onClick={() => handleOpenDialog(product)}>
                         <CardMedia
                           component="img"
                           height="200"
                           image={product.image.trim()}
                           alt={product.alt}
-                          sx={{ objectFit: "cover" }}
+                          sx={{
+                            objectFit: "contain",
+                            p: 2,
+                            backgroundColor: "#fafafa",
+                            borderBottom: "1px solid #eee",
+                          }}
                         />
                         <CardContent>
-                          <Typography variant="h6">
+                          <Typography
+                            variant="h6"
+                            color="text.primary"
+                            fontWeight="medium"
+                            gutterBottom
+                            noWrap
+                          >
                             {highlightText(product.title, searchQuery)}
                           </Typography>
+
                           <Typography
                             variant="body2"
                             color="text.secondary"
-                            sx={{ height: 60, overflow: "hidden" }}
+                            sx={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
                           >
                             {highlightText(product.description, searchQuery)}
                           </Typography>
+
                           {product.price !== undefined && (
                             <Typography
-                              variant="subtitle1"
+                              variant="h6"
                               color="primary"
-                              sx={{ mt: 1 }}
+                              sx={{ mt: 2, fontWeight: "bold" }}
                             >
                               ${" "}
                               {product.price.toLocaleString("es-AR", {
@@ -309,22 +292,37 @@ const Accessories: React.FC = () => {
                           )}
                         </CardContent>
                       </CardActionArea>
+
                       <CardActions
-                        sx={{ mt: "auto", justifyContent: "space-between" }}
+                        sx={{
+                          px: 2,
+                          pb: 2,
+                          justifyContent: "space-between",
+                          mt: "auto",
+                        }}
                       >
                         <Button
                           size="small"
                           variant="outlined"
-                          onClick={() => handleCardClick(product.image)}
+                          onClick={() => handleOpenDialog(product)}
+                          sx={{
+                            color: "#084f96ff", // texto verde
+                            borderColor: "#1976d3", // borde verde
+                            "&:hover": {
+                              backgroundColor: "#1882ecff", // fondo verde al hover
+                              color: "#fff", // texto blanco al hover
+                            },
+                          }}
                         >
                           Ver más
                         </Button>
+
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Tooltip title="Quitar del carrito">
                             <span>
                               <IconButton
                                 size="small"
-                                onClick={() => removeFromCart(product)}
+                                onClick={() => handleRemoveFromCart(product)}
                                 disabled={getItemQuantity(product) === 0}
                                 color="error"
                               >
@@ -332,12 +330,23 @@ const Accessories: React.FC = () => {
                               </IconButton>
                             </span>
                           </Tooltip>
-                          <Typography>{getItemQuantity(product)}</Typography>
+
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              minWidth: 24,
+                              textAlign: "center",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {getItemQuantity(product)}
+                          </Typography>
+
                           <Tooltip title="Añadir al carrito">
                             <IconButton
                               size="small"
-                              onClick={() => addToCart(product)}
-                              color="primary"
+                              onClick={() => handleAddToCart(product)}
+                              color="success"
                             >
                               <AddShoppingCart />
                             </IconButton>
@@ -353,12 +362,18 @@ const Accessories: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* Dialog imagen ampliada */}
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md">
-        {selectedImage && (
-          <>
+      {/* Dialog producto */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        {dialogProduct && (
+          <DialogContent sx={{ position: "relative", pt: 4 }}>
+            {/* Botón cerrar */}
             <IconButton
-              onClick={() => setOpen(false)}
+              onClick={handleCloseDialog}
               sx={{
                 position: "absolute",
                 top: 8,
@@ -368,105 +383,65 @@ const Accessories: React.FC = () => {
             >
               <Close />
             </IconButton>
-            <DialogContent>
-              <img
-                src={selectedImage.trim()}
-                alt="Ampliada"
-                style={{
-                  width: "100%",
-                  maxHeight: "80vh",
-                  objectFit: "contain",
-                }}
-              />
-            </DialogContent>
-          </>
-        )}
-      </Dialog>
 
-      {/* Dialog carrito con X roja para cerrar */}
-      <Dialog open={cartOpen} onClose={() => setCartOpen(false)} maxWidth="sm">
-        <IconButton
-          onClick={() => setCartOpen(false)}
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-            color: "error.main",
-            zIndex: 1,
-          }}
-        >
-          <Close />
-        </IconButton>
+            {/* Imagen del producto */}
+            <Box
+              component="img"
+              src={dialogProduct.image}
+              alt={dialogProduct.alt}
+              sx={{
+                width: "100%",
+                borderRadius: 2,
+                mb: 2,
+                objectFit: "contain",
+                backgroundColor: "#fafafa",
+                p: 1,
+              }}
+            />
 
-        <DialogContent dividers sx={{ pt: 6 }}>
-          {cartItems.length === 0 ? (
-            <Typography align="center" color="text.secondary">
-              No hay productos en el carrito.
+            {/* Nombre del producto */}
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              {dialogProduct.title}
             </Typography>
-          ) : (
-            <>
-              {cartItems.map(({ item, quantity }) => (
-                <Box
-                  key={item.title}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mb={2}
-                >
-                  <Typography>
-                    {item.title} (x{quantity})
-                  </Typography>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <IconButton
-                      size="small"
-                      onClick={() => removeFromCart(item)}
-                    >
-                      <Remove />
-                    </IconButton>
-                    <IconButton size="small" onClick={() => addToCart(item)}>
-                      <Add />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() =>
-                        setCartItems((prev) =>
-                          prev.filter((p) => p.item.title !== item.title)
-                        )
-                      }
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              ))}
 
-              <Divider sx={{ my: 2 }} />
+            {/* Descripción */}
+            <Typography variant="body1" sx={{ color: "text.primary", mt: 2 }}>
+              <Box component="span" sx={{ fontWeight: "bold", mr: 1 }}>
+                Descripción:
+              </Box>
+              {dialogProduct.description}
+            </Typography>
+
+            {/* Precio */}
+            {dialogProduct.price !== undefined && (
               <Typography
                 variant="h6"
-                align="right"
                 color="primary"
-                sx={{ fontWeight: "bold" }}
+                fontWeight="bold"
+                gutterBottom
               >
-                Total: ${" "}
-                {totalCartPrice.toLocaleString("es-AR", {
+                Precio: ${" "}
+                {dialogProduct.price.toLocaleString("es-AR", {
                   minimumFractionDigits: 2,
                 })}
               </Typography>
-            </>
-          )}
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            onClick={clearCart}
-            variant="outlined"
-            color="success"
-            disabled={cartItems.length === 0}
-          >
-            pagar y finalizar compra
-          </Button>
-        </DialogActions>
+            )}
+            <Box mt={3} display="flex" justifyContent="flex-start">
+              <Button
+                variant="contained"
+                color="success"
+                fullWidth
+                size="large"
+                onClick={() => {
+                  handleAddToCart(dialogProduct);
+                  setOpenDialog(false);
+                }}
+              >
+                Comprar ahora
+              </Button>
+            </Box>
+          </DialogContent>
+        )}
       </Dialog>
     </Container>
   );
