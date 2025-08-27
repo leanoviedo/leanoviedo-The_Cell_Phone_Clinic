@@ -27,6 +27,7 @@ interface UserData {
   firstName: string;
   lastName: string;
   email: string;
+  dni: string;
   phone: string;
   address: string;
   city: string;
@@ -37,11 +38,17 @@ interface UserData {
 const CheckoutSchema = Yup.object().shape({
   firstName: Yup.string().required("El nombre es obligatorio"),
   lastName: Yup.string().required("El apellido es obligatorio"),
+  dni: Yup.string()
+    .matches(/^\d+$/, "Solo se permiten números")
+    .min(7, "Debe tener al menos 7 dígitos")
+    .max(8, "Debe tener como máximo 8 dígitos")
+    .required("El DNI es obligatorio"),
   email: Yup.string()
     .email("Email inválido")
     .required("El email es obligatorio"),
   phone: Yup.string()
-    .matches(/^[0-9]{7,15}$/, "Teléfono inválido")
+    .matches(/^\d+$/, "Solo se permiten números")
+    .min(8, "Debe tener al menos 8 dígitos")
     .required("El teléfono es obligatorio"),
   deliveryMethod: Yup.string()
     .oneOf(["local", "domicilio"], "Debes seleccionar un método de entrega")
@@ -72,6 +79,7 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
   const initialValues: UserData = {
     firstName: "",
     lastName: "",
+    dni: "",
     email: "",
     phone: "",
     address: "",
@@ -87,20 +95,40 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
     }).format(price);
 
   return (
-    <Box sx={{ maxWidth: 700, mx: "auto", p: 3 }}>
-      <Typography variant="h5" gutterBottom>
-        Checkout - Resumen del pedido
-      </Typography>
-
+    <Box sx={{ maxWidth: 600, margin: "auto", p: 2 }}>
       {/* Resumen del carrito */}
       <Stack spacing={2} mb={3}>
         {cartItems.map(({ item, quantity }) => (
-          <Paper key={item.id} sx={{ p: 2, borderRadius: 2 }}>
-            <Typography fontWeight="bold">{item.title}</Typography>
-            <Typography>
-              Cantidad: {quantity} | Subtotal:{" "}
-              {formatPrice((item.price ?? 0) * quantity)}
-            </Typography>
+          <Paper
+            key={item.id}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            {/* Imagen del producto */}
+            <Box
+              component="img"
+              src={item.image}
+              alt={item.title}
+              sx={{
+                width: 80,
+                height: 80,
+                objectFit: "cover",
+                borderRadius: 1,
+              }}
+            />
+            {/* Info del producto */}
+            <Box>
+              <Typography fontWeight="bold">{item.title}</Typography>
+              <Typography>
+                Cantidad: {quantity} | Subtotal:{" "}
+                {formatPrice((item.price ?? 0) * quantity)}
+              </Typography>
+            </Box>
           </Paper>
         ))}
         <Typography variant="h6" textAlign="right" fontWeight="bold">
@@ -125,27 +153,31 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
           return (
             <Form>
               <Grid container spacing={2}>
-                {/* Nombre y Apellido */}
-                <Grid item xs={12} sm={6}>
+                {/* Nombre */}
+                <Grid item xs={12}>
                   <Field name="firstName">
                     {({ field }: FieldProps) => (
                       <TextField
                         {...field}
                         label="Nombre"
                         fullWidth
+                        size="small"
                         error={touched.firstName && Boolean(errors.firstName)}
                         helperText={touched.firstName && errors.firstName}
                       />
                     )}
                   </Field>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+
+                {/* Apellido */}
+                <Grid item xs={12}>
                   <Field name="lastName">
                     {({ field }: FieldProps) => (
                       <TextField
                         {...field}
                         label="Apellido"
                         fullWidth
+                        size="small"
                         error={touched.lastName && Boolean(errors.lastName)}
                         helperText={touched.lastName && errors.lastName}
                       />
@@ -153,8 +185,24 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </Field>
                 </Grid>
 
-                {/* Email y Teléfono */}
-                <Grid item xs={12} sm={6}>
+                {/* DNI */}
+                <Grid item xs={12}>
+                  <Field name="dni">
+                    {({ field }: FieldProps) => (
+                      <TextField
+                        {...field}
+                        label="DNI"
+                        fullWidth
+                        size="small"
+                        error={touched.dni && Boolean(errors.dni)}
+                        helperText={touched.dni && errors.dni}
+                      />
+                    )}
+                  </Field>
+                </Grid>
+
+                {/* Email */}
+                <Grid item xs={12}>
                   <Field name="email">
                     {({ field }: FieldProps) => (
                       <TextField
@@ -162,19 +210,23 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                         label="Email"
                         type="email"
                         fullWidth
+                        size="small"
                         error={touched.email && Boolean(errors.email)}
                         helperText={touched.email && errors.email}
                       />
                     )}
                   </Field>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+
+                {/* Teléfono */}
+                <Grid item xs={12}>
                   <Field name="phone">
                     {({ field }: FieldProps) => (
                       <TextField
                         {...field}
                         label="Teléfono"
                         fullWidth
+                        size="small"
                         error={touched.phone && Boolean(errors.phone)}
                         helperText={touched.phone && errors.phone}
                       />
