@@ -1,3 +1,4 @@
+// src/components/Phones.tsx
 import React, { useState, useMemo } from "react";
 import {
   Container,
@@ -34,10 +35,10 @@ import {
   AddShoppingCart,
   RemoveShoppingCart,
 } from "@mui/icons-material";
-
-import { phonesData, PhoneItem } from "../MockData/type-data-phones.tsx";
+import { useFetchPhones } from "../Hooks/useFetchPhones";
+import { PhoneItem } from "../types/types_Data";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store.tsx";
+import { RootState } from "../redux/store";
 import { addToCart, removeFromCart, removeItem } from "../redux/cartSlice";
 
 const Phones: React.FC = () => {
@@ -46,39 +47,39 @@ const Phones: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [selectedPhone, setSelectedPhone] = useState<PhoneItem | null>(null);
+
+  const { phones: phonesData, loading, error } = useFetchPhones();
   const cartItems = useSelector((state: RootState) => state.cart.phones);
   const dispatch = useDispatch();
-  // Resalta texto buscado (con keys para fragmentos)
-  const highlightText = (text: string, query: string) => {
-    if (!query || query.trim().length < 3) return text;
 
+  // 🔦 Resalta coincidencias usando markup real
+  const highlightText = (text: string, query: string) => {
+    if (!query) return text;
     const regex = new RegExp(`(${query})`, "gi");
     const parts = text.split(regex);
-
-    return parts.map((part, index) =>
-      regex.test(part) ? (
-        <span key={index} style={{ backgroundColor: "yellow" }}>
-          {part}
-        </span>
-      ) : (
-        part
-      )
+    return (
+      <>
+        {parts.map((part, i) =>
+          regex.test(part) ? (
+            <mark key={i}>{part}</mark>
+          ) : (
+            <span key={i}>{part}</span>
+          )
+        )}
+      </>
     );
   };
 
-  // Abrir modal con detalles
   const handleCardClick = (phone: PhoneItem) => {
     setSelectedPhone(phone);
     setOpen(true);
   };
 
-  // Toggle filtro marca
   const handleBrandToggle = (brand: string) =>
     setSelectedBrands((prev) =>
       prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
 
-  // Limpiar filtros y búsqueda
   const handleClearFilters = () => {
     setSelectedBrands([]);
     setSearchQuery("");
@@ -96,64 +97,55 @@ const Phones: React.FC = () => {
   const getItemQuantity = (item: PhoneItem) =>
     cartItems.find((p) => p.item.id === item.id)?.quantity ?? 0;
 
-  const totalCartPrice = useMemo(
-    () =>
-      cartItems.reduce((acc, p) => acc + (p.item.price ?? 0) * p.quantity, 0),
-    [cartItems]
-  );
-
-  // Listar todos los modelos con la marca integrada
-  const allPhonesWithBrand = useMemo(() => {
-    return phonesData.flatMap(({ brand, models }) =>
-      models.map((model) => ({ ...model, brand }))
-    );
-  }, []);
-
-  // Filtrar por marca seleccionada y búsqueda
   const filteredPhones = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
+    const query = searchQuery.trim().toLowerCase();
 
-    if (query.length > 0 && query.length < 3) {
-      // Si hay 1 o 2 letras, solo filtra por marca
-      return allPhonesWithBrand.filter(
-        ({ brand }) =>
-          selectedBrands.length === 0 || selectedBrands.includes(brand)
-      );
-    }
+    return phonesData.filter((phone) => {
+      const matchesBrand =
+        selectedBrands.length === 0 || selectedBrands.includes(phone.brand);
 
-    // Si no hay texto o hay 3+ letras, filtra por marca y texto
-    return allPhonesWithBrand.filter(
-      ({ brand, title, description, price, storage, ram, color, battery }) => {
-        const matchesBrand =
-          selectedBrands.length === 0 || selectedBrands.includes(brand);
+      const matchesSearch =
+        query === "" ||
+        Object.values(phone).some((value) =>
+          value?.toString().toLowerCase().includes(query)
+        );
 
-        const matchesSearch =
-          title.toLowerCase().includes(query) ||
-          description.toLowerCase().includes(query) ||
-          (price !== undefined && price.toString().includes(query)) ||
-          (storage && storage.toLowerCase().includes(query)) ||
-          (ram && ram.toLowerCase().includes(query)) ||
-          (color && color.toLowerCase().includes(query)) ||
-          (battery && battery.toLowerCase().includes(query));
+      return matchesBrand && matchesSearch;
+    });
+  }, [phonesData, selectedBrands, searchQuery]);
 
-        return matchesBrand && matchesSearch;
-      }
+  const totalCartPrice = useMemo(() => {
+    return cartItems
+      .filter(({ item }) => item.type === "phone")
+      .reduce((total, { item, quantity }) => total + item.price * quantity, 0);
+  }, [cartItems]);
+
+  if (loading)
+    return (
+      <Container sx={{ mt: 4 }}>
+        <Typography>Cargando celulares...</Typography>
+      </Container>
     );
-  }, [allPhonesWithBrand, selectedBrands, searchQuery]);
+
+  if (error)
+    return (
+      <Container sx={{ mt: 4 }}>
+        <Typography color="error">{error}</Typography>
+      </Container>
+    );
 
   return (
     <Container sx={{ mt: 4, mb: 6 }}>
-      {/* Header y carrito */}
+      {/* Header */}
       <Stack direction="row" justifyContent="space-between" mb={2}>
-        <Typography variant="h4" color="primary" fontWeight={"bold"}>
+        <Typography variant="h4" color="primary" fontWeight="bold">
           Celulares
         </Typography>
       </Stack>
 
       <Grid container spacing={2}>
-        {/* Sidebar con búsqueda y filtro */}
+        {/* Sidebar */}
         <Grid item xs={12} md={3}>
-          {/* Buscador */}
           <Box mb={2} sx={{ boxShadow: 1, borderRadius: 2, p: 1 }}>
             <TextField
               label="Buscar celulares"
@@ -171,7 +163,6 @@ const Phones: React.FC = () => {
             />
           </Box>
 
-          {/* Filtro por marca */}
           <Box
             p={2}
             border="1px solid #ddd"
@@ -183,7 +174,7 @@ const Phones: React.FC = () => {
             </Typography>
             <FormControl component="fieldset">
               <FormGroup>
-                {phonesData.map(({ brand }) => (
+                {[...new Set(phonesData.map((p) => p.brand))].map((brand) => (
                   <FormControlLabel
                     key={brand}
                     control={
@@ -214,7 +205,7 @@ const Phones: React.FC = () => {
           </Box>
         </Grid>
 
-        {/* Lista de productos filtrados */}
+        {/* Lista de productos */}
         <Grid item xs={12} md={9}>
           <Grid container spacing={3}>
             {filteredPhones.length === 0 ? (
@@ -231,7 +222,7 @@ const Phones: React.FC = () => {
                   <Typography
                     variant="h6"
                     color="black"
-                    fontWeight={"bold"}
+                    fontWeight="bold"
                     gutterBottom
                   >
                     😕 No encontramos celulares que coincidan con tu búsqueda.
@@ -284,39 +275,31 @@ const Phones: React.FC = () => {
                           </Typography>
 
                           <Stack direction="column" spacing={1} mt={2}>
-                            {phone.brand === "Apple" ? (
-                              <>
-                                {phone.battery && (
+                            {phone.brand === "Apple"
+                              ? phone.battery && (
                                   <Typography variant="body2" fontSize={14}>
                                     <strong>Batería:</strong>{" "}
                                     {highlightText(phone.battery, searchQuery)}
                                   </Typography>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                {phone.ram && (
+                                )
+                              : phone.ram && (
                                   <Typography variant="body2" fontSize={14}>
                                     <strong>RAM:</strong>{" "}
                                     {highlightText(phone.ram, searchQuery)}
                                   </Typography>
                                 )}
-                              </>
-                            )}
                             {phone.color && (
                               <Typography variant="body2" fontSize={14}>
                                 <strong>Color:</strong>{" "}
                                 {highlightText(phone.color, searchQuery)}
                               </Typography>
                             )}
-
                             {phone.storage && (
                               <Typography variant="body2" fontSize={14}>
                                 <strong>Almacenamiento:</strong>{" "}
                                 {highlightText(phone.storage, searchQuery)}
                               </Typography>
                             )}
-
                             {phone.description && (
                               <Typography
                                 variant="body2"
@@ -360,18 +343,17 @@ const Phones: React.FC = () => {
                           variant="outlined"
                           onClick={() => handleCardClick(phone)}
                           sx={{
-                            color: "#084f96ff", // texto verde
-                            borderColor: "#1976d3", // borde verde
+                            color: "#084f96ff",
+                            borderColor: "#1976d3",
                             "&:hover": {
-                              backgroundColor: "#1882ecff", // fondo verde al hover
-                              color: "#fff", // texto blanco al hover
+                              backgroundColor: "#1882ecff",
+                              color: "#fff",
                             },
                           }}
                         >
                           Ver más
                         </Button>
 
-                        {/* CONTADOR DE CANTIDAD */}
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Tooltip title="Quitar unidad">
                             <span>
@@ -417,7 +399,7 @@ const Phones: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* Modal imagen ampliada */}
+      {/* Modal detalles */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -458,46 +440,35 @@ const Phones: React.FC = () => {
                   <Typography variant="body1" paragraph>
                     {selectedPhone.description}
                   </Typography>
-                  <Typography variant="h6" color="black" gutterBottom>
+                  <Typography variant="h6" color="black">
                     Marca: <strong>{selectedPhone.brand}</strong>
                   </Typography>
-
-                  {selectedPhone.brand === "Apple" ? (
-                    <>
-                      {selectedPhone.battery && (
-                        <Typography variant="h6" color="black">
-                          Batería: <strong>{selectedPhone.battery}</strong>
-                        </Typography>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {selectedPhone.ram && (
-                        <Typography variant="h6" color="black">
-                          RAM: <strong>{selectedPhone.ram}</strong>
-                        </Typography>
-                      )}
-                    </>
+                  {selectedPhone.brand === "Apple" && selectedPhone.battery && (
+                    <Typography variant="h6" color="black">
+                      Batería: <strong>{selectedPhone.battery}</strong>
+                    </Typography>
                   )}
-
-                  <Typography variant="h6" color="black" gutterBottom>
+                  {selectedPhone.ram && (
+                    <Typography variant="h6" color="black">
+                      RAM: <strong>{selectedPhone.ram}</strong>
+                    </Typography>
+                  )}
+                  <Typography variant="h6" color="black">
                     Almacenamiento: <strong>{selectedPhone.storage}</strong>
                   </Typography>
                   <Typography variant="h6" color="black">
                     Color: <strong>{selectedPhone.color}</strong>
                   </Typography>
-                  <Typography variant="h6" color="primary" gutterBottom>
-                    <strong></strong>
+                  <Typography variant="h6" color="primary">
                     Precio:{" "}
                     <strong>
-                      ${" "}
+                      $
                       {selectedPhone.price.toLocaleString("es-AR", {
                         minimumFractionDigits: 2,
                       })}
                     </strong>
                   </Typography>
-
-                  <Box mt={3} display="flex" justifyContent="flex-start">
+                  <Box mt={3}>
                     <Button
                       variant="contained"
                       color="success"
@@ -505,7 +476,7 @@ const Phones: React.FC = () => {
                       size="large"
                       onClick={() => {
                         handleAddToCart(selectedPhone);
-                        setOpen(false); // opcional: cierra el modal después de agregar
+                        setOpen(false);
                       }}
                     >
                       Comprar ahora
@@ -529,7 +500,7 @@ const Phones: React.FC = () => {
           ) : (
             <>
               {cartItems
-                .filter(({ item }) => item.type === "phone") // solo celulares
+                .filter(({ item }) => item.type === "phone")
                 .map(({ item, quantity }) => (
                   <Box
                     key={item.id}
@@ -572,7 +543,7 @@ const Phones: React.FC = () => {
                 color="primary"
                 sx={{ fontWeight: "bold" }}
               >
-                Total: ${" "}
+                Total: $
                 {totalCartPrice.toLocaleString("es-AR", {
                   minimumFractionDigits: 2,
                 })}
