@@ -31,22 +31,14 @@ import {
   RemoveShoppingCart,
   Close,
 } from "@mui/icons-material";
-import { accessoriesData } from "../MockData/mock-dataAccessories";
+import { useFetchAccessories } from "../Hooks/useFetchAccessories";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { addToCart, removeFromCart } from "../redux/cartSlice";
-
-type AccessoryItem = {
-  id?: string;
-  title: string;
-  description: string;
-  image: string;
-  alt: string;
-  link: string;
-  price?: number;
-};
+import { AccessoryItem } from "../types/types_Data";
 
 const Accessories: React.FC = () => {
+  const { accessoriesData, loading, error } = useFetchAccessories();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -64,7 +56,7 @@ const Accessories: React.FC = () => {
           part.toLowerCase() === query.toLowerCase() ? (
             <span
               key={idx}
-              style={{ backgroundColor: "yellow", borderRadius: "4px" }}
+              style={{ backgroundColor: "yellow", borderRadius: 4 }}
             >
               {part}
             </span>
@@ -92,11 +84,8 @@ const Accessories: React.FC = () => {
     dispatch(removeFromCart({ ...item, type: "accessory" }));
 
   const getItemQuantity = (item: AccessoryItem) =>
-    cartItems.find(
-      (p) =>
-        p.item.type === "accessory" &&
-        p.item.title.toLowerCase() === item.title.toLowerCase()
-    )?.quantity ?? 0;
+    cartItems.find((p) => p.item.type === "accessory" && p.item.id === item.id)
+      ?.quantity ?? 0;
 
   const handleOpenDialog = (product: AccessoryItem) => {
     setDialogProduct(product);
@@ -109,6 +98,8 @@ const Accessories: React.FC = () => {
   };
 
   const filteredProducts = useMemo(() => {
+    if (!accessoriesData) return [];
+
     const allProducts = Object.entries(accessoriesData)
       .filter(
         ([category]) =>
@@ -126,11 +117,31 @@ const Accessories: React.FC = () => {
         (price !== undefined && price.toString().includes(query))
       );
     });
-  }, [selectedCategories, searchQuery]);
+  }, [accessoriesData, searchQuery, selectedCategories]);
+
+  if (loading) {
+    return (
+      <Container sx={{ mt: 4, mb: 6, textAlign: "center" }}>
+        <Typography variant="h6" color="text.secondary">
+          Cargando accesorios...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (error || !accessoriesData) {
+    return (
+      <Container sx={{ mt: 4, mb: 6, textAlign: "center" }}>
+        <Typography variant="h6" color="error">
+          Error al cargar los accesorios. Por favor, intenta nuevamente más
+          tarde.
+        </Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container sx={{ mt: 4, mb: 6 }}>
-      {/* Header */}
       <Stack direction="row" justifyContent="space-between" mb={2}>
         <Typography variant="h4" color="primary" fontWeight="bold">
           Accesorios
@@ -177,9 +188,7 @@ const Accessories: React.FC = () => {
                         onChange={() => handleCategoryToggle(category)}
                       />
                     }
-                    label={category
-                      .replace(/_/g, " ")
-                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                    label={category.charAt(0).toUpperCase() + category.slice(1)}
                   />
                 ))}
               </FormGroup>
@@ -225,7 +234,7 @@ const Accessories: React.FC = () => {
               </Grid>
             ) : (
               filteredProducts.map((product) => (
-                <Fade in key={product.id || product.title} timeout={500}>
+                <Fade in key={product.id} timeout={500}>
                   <Grid item xs={12} sm={6} md={4}>
                     <Card
                       sx={{
@@ -284,7 +293,7 @@ const Accessories: React.FC = () => {
                               color="primary"
                               sx={{ mt: 2, fontWeight: "bold" }}
                             >
-                              ${" "}
+                              $
                               {product.price.toLocaleString("es-AR", {
                                 minimumFractionDigits: 2,
                               })}
@@ -306,11 +315,11 @@ const Accessories: React.FC = () => {
                           variant="outlined"
                           onClick={() => handleOpenDialog(product)}
                           sx={{
-                            color: "#084f96ff", // texto verde
-                            borderColor: "#1976d3", // borde verde
+                            color: "#084f96ff",
+                            borderColor: "#1976d3",
                             "&:hover": {
-                              backgroundColor: "#1882ecff", // fondo verde al hover
-                              color: "#fff", // texto blanco al hover
+                              backgroundColor: "#1882ecff",
+                              color: "#fff",
                             },
                           }}
                         >
@@ -371,7 +380,6 @@ const Accessories: React.FC = () => {
       >
         {dialogProduct && (
           <DialogContent sx={{ position: "relative", pt: 4 }}>
-            {/* Botón cerrar */}
             <IconButton
               onClick={handleCloseDialog}
               sx={{
@@ -384,7 +392,6 @@ const Accessories: React.FC = () => {
               <Close />
             </IconButton>
 
-            {/* Imagen del producto */}
             <Box
               component="img"
               src={dialogProduct.image}
@@ -399,12 +406,10 @@ const Accessories: React.FC = () => {
               }}
             />
 
-            {/* Nombre del producto */}
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               {dialogProduct.title}
             </Typography>
 
-            {/* Descripción */}
             <Typography variant="body1" sx={{ color: "text.primary", mt: 2 }}>
               <Box component="span" sx={{ fontWeight: "bold", mr: 1 }}>
                 Descripción:
@@ -412,7 +417,6 @@ const Accessories: React.FC = () => {
               {dialogProduct.description}
             </Typography>
 
-            {/* Precio */}
             {dialogProduct.price !== undefined && (
               <Typography
                 variant="h6"
@@ -420,12 +424,13 @@ const Accessories: React.FC = () => {
                 fontWeight="bold"
                 gutterBottom
               >
-                Precio: ${" "}
+                Precio: $
                 {dialogProduct.price.toLocaleString("es-AR", {
                   minimumFractionDigits: 2,
                 })}
               </Typography>
             )}
+
             <Box mt={3} display="flex" justifyContent="flex-start">
               <Button
                 variant="contained"

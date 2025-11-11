@@ -26,7 +26,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-
 import { menuItems } from "../MockData/mock-nadvar-types";
 import { useSelector } from "react-redux";
 import { selectCartTotalQuantity } from "../redux/selectors/cartSelectors";
