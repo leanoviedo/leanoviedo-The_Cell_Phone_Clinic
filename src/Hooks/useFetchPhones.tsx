@@ -1,47 +1,32 @@
-// src/hooks/useFetchPhones.ts
 import { useState, useEffect } from "react";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import axios from "axios";
 import { PhoneItem } from "../types/types_Data";
 
+type PhonesByBrand = Record<string, PhoneItem[]>;
+
 export const useFetchPhones = () => {
-  const [phones, setPhones] = useState<PhoneItem[]>([]);
+  const [phonesData, setPhonesData] = useState<PhonesByBrand>({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchPhones = async () => {
+    const fetchData = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
-        const res: AxiosResponse<(PhoneItem & { _id?: string })[]> =
-          await axios.get("http://localhost:3000/api/phones", {
-            signal: controller.signal,
-          });
-
-        const normalized: PhoneItem[] = res.data.map((phone) => ({
-          ...phone,
-          id: phone._id ?? phone.id,
-        }));
-
-        setPhones(normalized);
+        const { data } = await axios.get<PhoneItem[]>("/api/phones");
+        const grouped = data.reduce((acc: PhonesByBrand, phone: PhoneItem) => {
+          if (!acc[phone.brand]) acc[phone.brand] = [];
+          acc[phone.brand].push(phone);
+          return acc;
+        }, {});
+        setPhonesData(grouped);
       } catch (err) {
-        if (axios.isCancel(err)) return;
-
-        const axiosError = err as AxiosError;
-        console.error("Error al obtener teléfonos:", axiosError.message);
-        setError("Error al cargar los celulares");
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPhones();
-
-    return () => controller.abort();
+    fetchData();
   }, []);
 
-  return { phones, loading, error };
+  return { phonesData, loading };
 };

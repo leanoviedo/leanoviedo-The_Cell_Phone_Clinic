@@ -9,38 +9,29 @@ export const useFetchAccessories = () => {
     {}
   );
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAccessories = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get<AccessoryItem[]>(
-          "http://localhost:3000/api/accessories"
+        const { data } = await axios.get<AccessoryItem[]>("/api/accessories");
+        const grouped = data.reduce(
+          (acc: AccessoriesByCategory, item: AccessoryItem) => {
+            if (!acc[item.category]) acc[item.category] = [];
+            acc[item.category].push(item);
+            return acc;
+          },
+          {}
         );
-
-        const grouped = res.data.reduce<AccessoriesByCategory>((acc, item) => {
-          const accessory: AccessoryItem = { ...item, id: item._id };
-          const cat = accessory.category || "otros";
-          if (!acc[cat]) acc[cat] = [];
-          acc[cat].push(accessory);
-          return acc;
-        }, {});
-
         setAccessoriesData(grouped);
       } catch (err) {
-        console.error("Error al obtener los accesorios:", err);
-        setError(
-          typeof err === "object" && err !== null && "message" in err
-            ? String((err as { message?: string }).message)
-            : "Error desconocido"
-        );
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAccessories();
+    fetchData();
   }, []);
 
-  return { accessoriesData, loading, error };
+  return { accessoriesData, loading };
 };
