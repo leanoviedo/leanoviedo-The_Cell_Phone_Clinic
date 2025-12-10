@@ -1,3 +1,5 @@
+/// <reference lib="es2020" />
+
 {
   "compilerOptions": {
     "target": "ES2020",

@@ -1,7 +1,6 @@
 // src/redux/cartSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PhoneItem } from "../MockData/type-data-phones";
-import { AccessoryItem } from "../MockData/mock-dataAccessories";
+import { PhoneItem, AccessoryItem } from "../types/types_Data";
 
 // CartProduct unificado con tipo
 export type CartProduct =
