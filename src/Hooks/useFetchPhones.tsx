@@ -15,11 +15,17 @@ export const useFetchPhones = () => {
       try {
         setLoading(true);
         setError(null);
+        const baseURL = import.meta.env.VITE_API_URL;
+        if (!baseURL) throw new Error("VITE_API_URL no está definida");
 
-        const res: AxiosResponse<(PhoneItem & { _id?: string })[]> =
-          await axios.get("http://localhost:3000/api/phones", {
-            signal: controller.signal,
-          });
+        const res: AxiosResponse<PhoneItem[]> = await axios.get<PhoneItem[]>(
+          `${baseURL}/api/phones`,
+          { signal: controller.signal }
+        );
+
+        if (!Array.isArray(res.data)) {
+          throw new Error("La respuesta del backend no es un array");
+        }   
 
         const normalized: PhoneItem[] = res.data.map((phone) => ({
           ...phone,

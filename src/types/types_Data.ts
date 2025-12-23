@@ -49,6 +49,7 @@ export interface AccessoriesData {
 // Interfaces para celulares
 
 export interface PhoneItem {
+  _id: string;
   id: string;
   price: number;
   title: string;

@@ -3,6 +3,7 @@ import HeadphonesIcon from "@mui/icons-material/Headphones";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import FacebookIcon from "@mui/icons-material/Facebook";
 //📦 Interfaces para tipado
 export const menuItems = [
   { text: "Inicio", icon: <HomeIcon />, path: "/" },
@@ -15,9 +16,15 @@ export const menuItems = [
     external: true,
   },
   {
-    text: "Instagram",
-    icon: <InstagramIcon sx={{ color: "#E1306C" }} />,
-    path: "http://instagram.com/la.clinica.del.celular/",
+    text: "Facebook",
+    icon: <FacebookIcon sx={{ color: "blue" }} />,
+    path: "https://www.facebook.com/laclinicadelcelular.07",
     external: true,
   },
+  {
+    text: "Instagram",
+    icon: <InstagramIcon sx={{ color: "#E1306C" }} />,
+    path: "https://www.instagram.com/laclinicadelcelular.07/",
+    external: true,
+  }, 
 ];

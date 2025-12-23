@@ -26,6 +26,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import FacebookIcon from "@mui/icons-material/Facebook";
 import { menuItems } from "../MockData/mock-nadvar";
 import { useSelector } from "react-redux";
 import { selectCartTotalQuantity } from "../redux/selectors/cartSelectors";
@@ -289,7 +290,7 @@ function Layout() {
           sx={{ mb: 2 }}
         >
           <MuiLink
-            href="https://instagram.com/la.clinica.del.celular"
+            href="https://www.instagram.com/laclinicadelcelular.07/"
             target="_blank"
             rel="noopener noreferrer"
             sx={{
@@ -318,6 +319,22 @@ function Layout() {
           >
             <WhatsAppIcon /> WhatsApp
           </MuiLink>
+          <MuiLink
+            href="https://www.facebook.com/laclinicadelcelular.07"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              color: "white",
+              textDecoration: "none",
+              "&:hover": { color: "#1e58d6ff" },
+            }}
+          >
+            <FacebookIcon /> Facebook
+          </MuiLink>
+
           <MuiLink
             href="https://maps.app.goo.gl/FBmdCqcW2YumcuRo8"
             target="_blank"
