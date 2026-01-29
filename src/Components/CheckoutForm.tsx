@@ -1,4 +1,3 @@
-// src/components/CheckoutForm.tsx
 import React from "react";
 import {
   Box,
@@ -17,11 +16,13 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FieldProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   selectCartItems,
   selectCartTotalPrice,
 } from "../redux/selectors/cartSelectors";
+import { clearCart } from "../redux/cartSlice";
 
 interface UserData {
   firstName: string;
@@ -40,15 +41,15 @@ const CheckoutSchema = Yup.object().shape({
   lastName: Yup.string().required("El apellido es obligatorio"),
   dni: Yup.string()
     .matches(/^\d+$/, "Solo se permiten números")
-    .min(7, "Debe tener al menos 7 dígitos")
+    .min(8, "Debe tener al menos 8 dígitos")
     .max(8, "Debe tener como máximo 8 dígitos")
     .required("El DNI es obligatorio"),
   email: Yup.string()
-    .email("Email inválido")
+    .email("Email inválido debe tener formato válido ")
     .required("El email es obligatorio"),
   phone: Yup.string()
     .matches(/^\d+$/, "Solo se permiten números")
-    .min(8, "Debe tener al menos 8 dígitos")
+    .min(9, "Debe tener al menos 9 dígitos")
     .required("El teléfono es obligatorio"),
   deliveryMethod: Yup.string()
     .oneOf(["local", "domicilio"], "Debes seleccionar un método de entrega")
@@ -73,6 +74,8 @@ const CheckoutSchema = Yup.object().shape({
 const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
   onSubmit,
 }) => {
+  const dispatch = useDispatch();
+
   const cartItems = useSelector(selectCartItems);
   const total = useSelector(selectCartTotalPrice);
 
@@ -109,7 +112,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
               gap: 2,
             }}
           >
-            {/* Imagen del producto */}
             <Box
               component="img"
               src={item.image}
@@ -121,7 +123,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                 borderRadius: 1,
               }}
             />
-            {/* Info del producto */}
             <Box>
               <Typography fontWeight="bold">{item.title}</Typography>
               <Typography>
@@ -131,6 +132,7 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
             </Box>
           </Paper>
         ))}
+
         <Typography variant="h6" textAlign="right" fontWeight="bold">
           Total: {formatPrice(total)}
         </Typography>
@@ -142,8 +144,15 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
         validationSchema={CheckoutSchema}
         onSubmit={(values: UserData, actions: FormikHelpers<UserData>) => {
           if (onSubmit) onSubmit(values);
+
           console.log("Datos enviados:", values);
+
+          // LIMPIA REDUX + REDUX-PERSIST
+          dispatch(clearCart());
+
+          actions.resetForm();
           actions.setSubmitting(false);
+
           alert("Compra finalizada con éxito!");
         }}
       >
@@ -153,7 +162,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
           return (
             <Form>
               <Grid container spacing={2}>
-                {/* Nombre */}
                 <Grid item xs={12}>
                   <Field name="firstName">
                     {({ field }: FieldProps) => (
@@ -169,7 +177,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </Field>
                 </Grid>
 
-                {/* Apellido */}
                 <Grid item xs={12}>
                   <Field name="lastName">
                     {({ field }: FieldProps) => (
@@ -185,7 +192,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </Field>
                 </Grid>
 
-                {/* DNI */}
                 <Grid item xs={12}>
                   <Field name="dni">
                     {({ field }: FieldProps) => (
@@ -201,7 +207,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </Field>
                 </Grid>
 
-                {/* Email */}
                 <Grid item xs={12}>
                   <Field name="email">
                     {({ field }: FieldProps) => (
@@ -218,7 +223,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </Field>
                 </Grid>
 
-                {/* Teléfono */}
                 <Grid item xs={12}>
                   <Field name="phone">
                     {({ field }: FieldProps) => (
@@ -234,9 +238,8 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </Field>
                 </Grid>
 
-                {/* Método de entrega */}
                 <Grid item xs={12}>
-                  <FormLabel>Seleccione método de entrega</FormLabel>
+                  <FormLabel>Método de entrega</FormLabel>
                   <RadioGroup
                     row
                     value={values.deliveryMethod}
@@ -262,7 +265,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   )}
                 </Grid>
 
-                {/* Dirección y Ciudad (solo si domicilio) */}
                 {isDomicilio && (
                   <>
                     <Grid item xs={12}>
@@ -294,7 +296,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   </>
                 )}
 
-                {/* Términos y condiciones */}
                 <Grid item xs={12}>
                   <FormControlLabel
                     control={
@@ -312,23 +313,17 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                   )}
                 </Grid>
 
-                {/* Botón Finalizar */}
                 <Grid item xs={12}>
                   <Button
                     type="submit"
-                    variant="contained"
-                    color="primary"
                     fullWidth
                     disabled={isSubmitting}
+                    variant="contained"
                     sx={{
                       borderRadius: 2,
                       textTransform: "none",
                       background:
                         "linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)",
-                      "&:hover": {
-                        background:
-                          "linear-gradient(135deg, #2e7d32 0%, #4caf50 100%)",
-                      },
                     }}
                   >
                     Finalizar Compra
