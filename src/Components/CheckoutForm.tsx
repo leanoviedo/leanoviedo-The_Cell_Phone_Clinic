@@ -17,6 +17,7 @@ import {
 import { Formik, Form, Field, FieldProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 
 import {
   selectCartItems,
@@ -24,10 +25,6 @@ import {
 } from "../redux/selectors/cartSelectors";
 import { clearCart } from "../redux/cartSlice";
 import TermsDialog from "./TermsDialog";
-
-/* =======================
-   Types
-======================= */
 
 interface UserData {
   firstName: string;
@@ -40,11 +37,6 @@ interface UserData {
   acceptTerms: boolean;
   deliveryMethod: "local" | "domicilio" | "";
 }
-
-/* =======================
-   Validation schema
-======================= */
-
 const CheckoutSchema = Yup.object().shape({
   firstName: Yup.string().required("El nombre es obligatorio"),
   lastName: Yup.string().required("El apellido es obligatorio"),
@@ -74,14 +66,7 @@ const CheckoutSchema = Yup.object().shape({
     .oneOf([true], "Debes aceptar los términos y condiciones")
     .required(),
 });
-
-/* =======================
-   Component
-======================= */
-
-const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
-  onSubmit,
-}) => {
+const CheckoutForm: React.FC = () => {
   const dispatch = useDispatch();
   const [openTerms, setOpenTerms] = React.useState(false);
 
@@ -106,19 +91,23 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
       currency: "ARS",
     }).format(price);
 
+  const buildOrderItems = () => {
+    return cartItems.map(({ item, quantity }) => ({
+      productId: item.id,
+      title: item.title,
+      price: item.price,
+      quantity,
+      type: item.type,
+    }));
+  };
+
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
-      {/* ===== Resumen del carrito ===== */}
       <Stack spacing={2} mb={3}>
         {cartItems.map(({ item, quantity }) => (
           <Paper
             key={item.id}
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              display: "flex",
-              gap: 2,
-            }}
+            sx={{ p: 2, borderRadius: 2, display: "flex", gap: 2 }}
           >
             <Box
               component="img"
@@ -135,7 +124,7 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
               <Typography fontWeight="bold">{item.title}</Typography>
               <Typography variant="body2">
                 Cantidad: {quantity} | Subtotal:{" "}
-                {formatPrice((item.price ?? 0) * quantity)}
+                {formatPrice(item.price * quantity)}
               </Typography>
             </Box>
           </Paper>
@@ -145,20 +134,41 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
           Total: {formatPrice(total)}
         </Typography>
       </Stack>
-
-      {/* ===== Formulario ===== */}
       <Formik
         initialValues={initialValues}
         validationSchema={CheckoutSchema}
-        onSubmit={(values: UserData, actions: FormikHelpers<UserData>) => {
-          onSubmit?.(values);
+        onSubmit={async (
+          values: UserData,
+          actions: FormikHelpers<UserData>,
+        ) => {
+          try {
+            const items = buildOrderItems();
 
-          dispatch(clearCart());
+            const response = await axios.post(
+              `${import.meta.env.VITE_API_URL}/api/orders`,
+              {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                email: values.email,
+                phone: values.phone,
+                dni: values.dni,
+                deliveryMethod: values.deliveryMethod,
+                address: values.address,
+                city: values.city,
+                items,
+              },
+            );
 
-          actions.resetForm();
-          actions.setSubmitting(false);
-
-          alert("¡Compra finalizada con éxito!");
+            const { orderNumber } = response.data;
+            alert(`Orden ${orderNumber} creada. Redirigiendo a MercadoPago...`);
+            dispatch(clearCart());
+            actions.resetForm();
+          } catch (error) {
+            console.error("Error al procesar la compra:", error);
+            alert("Hubo un error al procesar la compra");
+          } finally {
+            actions.setSubmitting(false);
+          }
         }}
       >
         {({ errors, touched, isSubmitting, values, setFieldValue }) => {
@@ -168,81 +178,35 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
             <>
               <Form>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Field name="firstName">
-                      {({ field }: FieldProps) => (
-                        <TextField
-                          {...field}
-                          label="Nombre"
-                          fullWidth
-                          size="small"
-                          error={touched.firstName && !!errors.firstName}
-                          helperText={touched.firstName && errors.firstName}
-                        />
-                      )}
-                    </Field>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Field name="lastName">
-                      {({ field }: FieldProps) => (
-                        <TextField
-                          {...field}
-                          label="Apellido"
-                          fullWidth
-                          size="small"
-                          error={touched.lastName && !!errors.lastName}
-                          helperText={touched.lastName && errors.lastName}
-                        />
-                      )}
-                    </Field>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Field name="dni">
-                      {({ field }: FieldProps) => (
-                        <TextField
-                          {...field}
-                          label="DNI"
-                          fullWidth
-                          size="small"
-                          error={touched.dni && !!errors.dni}
-                          helperText={touched.dni && errors.dni}
-                        />
-                      )}
-                    </Field>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Field name="email">
-                      {({ field }: FieldProps) => (
-                        <TextField
-                          {...field}
-                          label="Email"
-                          type="email"
-                          fullWidth
-                          size="small"
-                          error={touched.email && !!errors.email}
-                          helperText={touched.email && errors.email}
-                        />
-                      )}
-                    </Field>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Field name="phone">
-                      {({ field }: FieldProps) => (
-                        <TextField
-                          {...field}
-                          label="Teléfono"
-                          fullWidth
-                          size="small"
-                          error={touched.phone && !!errors.phone}
-                          helperText={touched.phone && errors.phone}
-                        />
-                      )}
-                    </Field>
-                  </Grid>
+                  {[
+                    { name: "firstName", label: "Nombre" },
+                    { name: "lastName", label: "Apellido" },
+                    { name: "dni", label: "DNI" },
+                    { name: "email", label: "Email", type: "email" },
+                    { name: "phone", label: "Teléfono" },
+                  ].map((fieldConfig) => (
+                    <Grid item xs={12} key={fieldConfig.name}>
+                      <Field name={fieldConfig.name}>
+                        {({ field }: FieldProps) => (
+                          <TextField
+                            {...field}
+                            label={fieldConfig.label}
+                            type={fieldConfig.type || "text"}
+                            fullWidth
+                            size="small"
+                            error={
+                              touched[fieldConfig.name as keyof UserData] &&
+                              !!errors[fieldConfig.name as keyof UserData]
+                            }
+                            helperText={
+                              touched[fieldConfig.name as keyof UserData] &&
+                              errors[fieldConfig.name as keyof UserData]
+                            }
+                          />
+                        )}
+                      </Field>
+                    </Grid>
+                  ))}
 
                   <Grid item xs={12}>
                     <FormLabel>Método de entrega</FormLabel>
@@ -270,7 +234,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                       </FormHelperText>
                     )}
                   </Grid>
-
                   {isDomicilio && (
                     <>
                       <Grid item xs={12}>
@@ -300,6 +263,19 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                           )}
                         </Field>
                       </Grid>
+
+                      {/* ===== Mostrar costo de envío ===== */}
+                      <Grid item xs={12}>
+                        <Typography variant="body2" fontWeight="bold">
+                          Envío:{" "}
+                          {total < 1000
+                            ? "Gratis"
+                            : new Intl.NumberFormat("es-AR", {
+                                style: "currency",
+                                currency: "ARS",
+                              }).format(25000)}
+                        </Typography>
+                      </Grid>
                     </>
                   )}
 
@@ -322,7 +298,7 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                             onClick={() => setOpenTerms(true)}
                             sx={{ textTransform: "none", p: 0 }}
                           >
-                            Terminos y Condiciones
+                            Términos y Condiciones
                           </Button>
                         </>
                       }
@@ -338,7 +314,7 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                     <Button
                       type="submit"
                       fullWidth
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || cartItems.length === 0}
                       variant="contained"
                       sx={{
                         borderRadius: 2,
@@ -353,7 +329,6 @@ const CheckoutForm: React.FC<{ onSubmit?: (data: UserData) => void }> = ({
                 </Grid>
               </Form>
 
-              {/* ===== Terms Dialog ===== */}
               <TermsDialog
                 open={openTerms}
                 onClose={() => setOpenTerms(false)}
