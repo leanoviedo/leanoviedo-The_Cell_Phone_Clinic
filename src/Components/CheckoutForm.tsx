@@ -159,8 +159,20 @@ const CheckoutForm: React.FC = () => {
               },
             );
 
-            const { orderNumber } = response.data;
-            alert(`Orden ${orderNumber} creada. Redirigiendo a MercadoPago...`);
+            const { orderNumber, orderId } = response.data;
+
+            // 🔥 Enviar email en segundo plano (no bloquea)
+            if (response.data.success) {
+              axios
+                .post(`${import.meta.env.VITE_API_URL}/api/send-email`, {
+                  orderId,
+                })
+                .catch((err) => {
+                  console.error("Error enviando email:", err);
+                });
+            }
+
+            alert(`Orden ${orderNumber} creada correctamente`);
             dispatch(clearCart());
             actions.resetForm();
           } catch (error) {
