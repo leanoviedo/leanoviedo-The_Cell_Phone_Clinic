@@ -37,6 +37,7 @@ interface UserData {
   acceptTerms: boolean;
   deliveryMethod: "local" | "domicilio" | "";
 }
+
 const CheckoutSchema = Yup.object().shape({
   firstName: Yup.string().required("El nombre es obligatorio"),
   lastName: Yup.string().required("El apellido es obligatorio"),
@@ -66,6 +67,7 @@ const CheckoutSchema = Yup.object().shape({
     .oneOf([true], "Debes aceptar los términos y condiciones")
     .required(),
 });
+
 const CheckoutForm: React.FC = () => {
   const dispatch = useDispatch();
   const [openTerms, setOpenTerms] = React.useState(false);
@@ -103,6 +105,7 @@ const CheckoutForm: React.FC = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
+      {/* ===== Resumen del carrito ===== */}
       <Stack spacing={2} mb={3}>
         {cartItems.map(({ item, quantity }) => (
           <Paper
@@ -134,6 +137,8 @@ const CheckoutForm: React.FC = () => {
           Total: {formatPrice(total)}
         </Typography>
       </Stack>
+
+      {/* ===== Formulario ===== */}
       <Formik
         initialValues={initialValues}
         validationSchema={CheckoutSchema}
@@ -144,30 +149,58 @@ const CheckoutForm: React.FC = () => {
           try {
             const items = buildOrderItems();
 
+            // ✅ Costo de envío: gratis en compras >= $1000, sino $25.000
+            const shippingCost =
+              values.deliveryMethod === "domicilio" ? 25000 : 0;
+
             const response = await axios.post(
               `${import.meta.env.VITE_API_URL}/api/orders`,
               {
-                firstName: values.firstName,
-                lastName: values.lastName,
-                email: values.email,
-                phone: values.phone,
-                dni: values.dni,
-                deliveryMethod: values.deliveryMethod,
-                address: values.address,
-                city: values.city,
+                customer: {
+                  firstName: values.firstName,
+                  lastName: values.lastName,
+                  email: values.email,
+                  phone: values.phone,
+                  dni: values.dni,
+                },
+                delivery: {
+                  method: values.deliveryMethod,
+                  address: values.address || "",
+                  city: values.city || "",
+                  shippingCost,
+                },
                 items,
+                subtotal: total,
+                totalAmount:
+                  total +
+                  (values.deliveryMethod === "domicilio" ? shippingCost : 0),
               },
             );
 
+            // ✅ FIX
             const { orderNumber } = response.data;
-            alert(`Orden ${orderNumber} creada. Redirigiendo a MercadoPago...`);
+
+            alert(`Orden ${orderNumber} creada con éxito.`);
             dispatch(clearCart());
             actions.resetForm();
           } catch (error) {
-            console.error("Error al procesar la compra:", error);
-            alert("Hubo un error al procesar la compra");
-          } finally {
-            actions.setSubmitting(false);
+            const err = error as {
+              response?: {
+                data?: {
+                  error?: string;
+                };
+              };
+              message?: string;
+            };
+
+            console.log("🔥 ERROR COMPLETO:", err);
+            console.log("🔥 RESPUESTA BACKEND:", err.response?.data);
+
+            alert(
+              err.response?.data?.error
+                ? `Error: ${err.response.data.error}`
+                : err.message || "Error desconocido",
+            );
           }
         }}
       >
@@ -208,6 +241,7 @@ const CheckoutForm: React.FC = () => {
                     </Grid>
                   ))}
 
+                  {/* ===== Método de entrega ===== */}
                   <Grid item xs={12}>
                     <FormLabel>Método de entrega</FormLabel>
                     <RadioGroup
@@ -234,6 +268,8 @@ const CheckoutForm: React.FC = () => {
                       </FormHelperText>
                     )}
                   </Grid>
+
+                  {/* ===== Campos de domicilio ===== */}
                   {isDomicilio && (
                     <>
                       <Grid item xs={12}>
@@ -264,21 +300,37 @@ const CheckoutForm: React.FC = () => {
                         </Field>
                       </Grid>
 
-                      {/* ===== Mostrar costo de envío ===== */}
+                      {/* ===== Costo de envío ===== */}
                       <Grid item xs={12}>
+                        {/* Envío */}
                         <Typography variant="body2" fontWeight="bold">
                           Envío:{" "}
-                          {total < 1000
-                            ? "Gratis"
-                            : new Intl.NumberFormat("es-AR", {
+                          {values.deliveryMethod === "domicilio"
+                            ? new Intl.NumberFormat("es-AR", {
                                 style: "currency",
                                 currency: "ARS",
-                              }).format(25000)}
+                              }).format(25000)
+                            : "Gratis"}
+                        </Typography>
+
+                        {/* Total final */}
+                        <Typography variant="h6" fontWeight="bold">
+                          Total final:{" "}
+                          {new Intl.NumberFormat("es-AR", {
+                            style: "currency",
+                            currency: "ARS",
+                          }).format(
+                            total +
+                              (values.deliveryMethod === "domicilio"
+                                ? 25000
+                                : 0),
+                          )}
                         </Typography>
                       </Grid>
                     </>
                   )}
 
+                  {/* ===== Términos y condiciones ===== */}
                   <Grid item xs={12}>
                     <FormControlLabel
                       control={
@@ -310,6 +362,7 @@ const CheckoutForm: React.FC = () => {
                     )}
                   </Grid>
 
+                  {/* ===== Botón submit ===== */}
                   <Grid item xs={12}>
                     <Button
                       type="submit"
