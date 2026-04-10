@@ -149,10 +149,6 @@ const CheckoutForm: React.FC = () => {
           try {
             const items = buildOrderItems();
 
-            // ✅ Costo de envío: gratis en compras >= $1000, sino $25.000
-            const shippingCost =
-              values.deliveryMethod === "domicilio" ? 25000 : 0;
-
             const response = await axios.post(
               `${import.meta.env.VITE_API_URL}/api/orders`,
               {
@@ -167,16 +163,10 @@ const CheckoutForm: React.FC = () => {
                   method: values.deliveryMethod,
                   address: values.address || "",
                   city: values.city || "",
-                  shippingCost,
                 },
                 items,
-                subtotal: total,
-                totalAmount:
-                  total +
-                  (values.deliveryMethod === "domicilio" ? shippingCost : 0),
               },
             );
-
             // ✅ FIX
             const { orderNumber } = response.data;
 
