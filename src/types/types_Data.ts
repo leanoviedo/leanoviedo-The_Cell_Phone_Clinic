@@ -1,11 +1,11 @@
+// src/types/types_Data.ts
+
 export interface ServiceImage {
+  id: string | undefined;
+  _id?: string;
   name: string;
   description: string;
   image: string;
-  style: {
-    height: { xs: string; md: string };
-    objectFit: string;
-  };
 }
 
 export interface AccessoryItem {

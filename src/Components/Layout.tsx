@@ -6,7 +6,6 @@ import {
   Box,
   Container,
   Button,
-  Avatar,
   Typography,
   Link as MuiLink,
   Stack,
@@ -40,7 +39,13 @@ function Layout() {
   const handleCartToggle = () => setCartOpen(!cartOpen);
   const totalQuantity = useSelector(selectCartTotalQuantity);
   const drawer = (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
+   <Box
+  sx={{
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+  }}
+>
       <Typography
         sx={{
           width: "100%",
@@ -94,7 +99,7 @@ function Layout() {
   );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: { xs: 65, md: 75 } }}>
       {/* Navbar */}
       <AppBar
         position="static"
@@ -115,12 +120,16 @@ function Layout() {
                 fontSize: "1.5rem",
               }}
             >
-              <Avatar
-                src="/images/imageslogodog.jpeg"
-                alt="logo_Doc"
-                sx={{ width: 48, height: 48, mr: 1 }}
+              <Box
+                component="img"
+                src="https://res.cloudinary.com/dkuyafvhk/image/upload/v1776558108/banner1_plxaoy.jpg"
+                sx={{
+                  width: { xs: 150, sm: 150, md: 210 },
+                  height: 60,
+                  objectFit: "cover",
+                }}
+                alt="Lean servicio tecnico logo with a smartphone and tools graphic and the text LEAN SERVICIO TECNICO on a clean white background"
               />
-              La Clínica del Celular
             </Box>
 
             {/* Desktop menu */}
@@ -269,92 +278,145 @@ function Layout() {
 
       {/* Footer */}
       <Box
-        component="footer"
-        sx={{
-          backgroundColor: "#212121",
-          color: "white",
-          py: 4,
-          px: 2,
-          textAlign: "center",
-        }}
-      >
-        <Typography variant="h6" fontWeight="bold" gutterBottom>
-          La Clínica del Celular
-        </Typography>
-        <Stack
-          direction="row"
-          spacing={4}
-          justifyContent="center"
-          alignItems="center"
-          flexWrap="wrap"
-          sx={{ mb: 2 }}
-        >
-          <MuiLink
-            href="https://www.instagram.com/laclinicadelcelular.07/"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-              textDecoration: "none",
-              "&:hover": { color: "violet" },
-            }}
-          >
-            <InstagramIcon /> Instagram
-          </MuiLink>
-          <MuiLink
-            href="https://wa.me/2615555634"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-              textDecoration: "none",
-              "&:hover": { color: "#25D366" },
-            }}
-          >
-            <WhatsAppIcon /> WhatsApp
-          </MuiLink>
-          <MuiLink
-            href="https://www.facebook.com/laclinicadelcelular.07"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-              textDecoration: "none",
-              "&:hover": { color: "#1e58d6ff" },
-            }}
-          >
-            <FacebookIcon /> Facebook
-          </MuiLink>
+  component="footer"
+  sx={{
+    background: "linear-gradient(135deg, #151515 0%, #242424 100%)",
+    color: "white",
+    py: 5,
+    px: 2,
+    textAlign: "center",
+    mt: "auto",
+  }}
+>
+  <Typography
+    variant="h5"
+    fontWeight="bold"
+    sx={{ mb: 1 }}
+  >
+    Lean Servicio Técnico
+  </Typography>
 
-          <MuiLink
-            href="https://maps.app.goo.gl/FBmdCqcW2YumcuRo8"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              color: "white",
-              textDecoration: "none",
-              "&:hover": { color: "#f44336" },
-            }}
-          >
-            <LocationOnIcon /> Calle Catamarca 23, Mendoza
-          </MuiLink>
-        </Stack>
-        <Typography variant="body2">
-          © 2025 Todos los derechos reservados
-        </Typography>
-      </Box>
+  <Typography
+    variant="h6"
+    fontWeight="bold"
+    sx={{
+      color: "#4badef",
+      fontStyle: "italic",
+      mb: 3,
+    }}
+  >
+    Reparamos lo que te conecta
+  </Typography>
+
+  <Stack
+    direction="row"
+    spacing={3}
+    justifyContent="center"
+    alignItems="center"
+    flexWrap="wrap"
+    sx={{ mb: 3, rowGap: 2 }}
+  >
+    <MuiLink
+      href="https://www.instagram.com/laclinicadelcelular.07/"
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        color: "white",
+        textDecoration: "none",
+        transition: "0.3s",
+        "&:hover": {
+          color: "#E1306C",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      <InstagramIcon />
+      Instagram
+    </MuiLink>
+
+    <MuiLink
+      href="https://wa.me/2615555634"
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        color: "white",
+        textDecoration: "none",
+        transition: "0.3s",
+        "&:hover": {
+          color: "#25D366",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      <WhatsAppIcon />
+      WhatsApp
+    </MuiLink>
+
+    <MuiLink
+      href="https://www.facebook.com/laclinicadelcelular.07"
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        color: "white",
+        textDecoration: "none",
+        transition: "0.3s",
+        "&:hover": {
+          color: "#1877F2",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      <FacebookIcon />
+      Facebook
+    </MuiLink>
+
+    <MuiLink
+      href="https://maps.app.goo.gl/FBmdCqcW2YumcuRo8"
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        color: "white",
+        textDecoration: "none",
+        transition: "0.3s",
+        "&:hover": {
+          color: "#f44336",
+          transform: "translateY(-2px)",
+        },
+      }}
+    >
+      <LocationOnIcon />
+      Calle Catamarca 23, Mendoza
+    </MuiLink>
+  </Stack>
+
+  <Divider
+    sx={{
+      maxWidth: 900,
+      mx: "auto",
+      mb: 2,
+      borderColor: "rgba(255,255,255,0.15)",
+    }}
+  />
+
+  <Typography
+    variant="body2"
+    sx={{ color: "rgba(255,255,255,0.65)" }}
+  >
+    © {new Date().getFullYear()} Lean Servicio Técnico. Todos los derechos reservados.
+  </Typography>
+</Box>
     </Box>
   );
 }
