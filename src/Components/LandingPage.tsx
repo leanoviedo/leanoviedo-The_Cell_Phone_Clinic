@@ -7,13 +7,9 @@ import {
   CircularProgress,
 } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/autoplay";
-import { Autoplay } from "swiper/modules";
 import Carousel from "react-material-ui-carousel";
 import { Link as RouterLink } from "react-router-dom";
-import { serviceImages } from "../MockData/mock-serviceImages.tsx";
+import { useFetchServices } from "../Hooks/useFetchServices.tsx";
 import { useFetchAccessories } from "../Hooks/useFetchAccessories.tsx";
 import { useFetchPhones } from "../Hooks/useFetchPhones.tsx";
 import { PromotionData } from "../types/types_Data.ts";
@@ -25,7 +21,7 @@ const LandingPages = () => {
     loading: loadingPhones,
     error: errorPhones,
   } = useFetchPhones();
-
+  const { services } = useFetchServices();
   // Aplanamos los accesorios por categoría
   const accessoriesArray: PromotionData[] =
     Object.values(accessoriesData).flat();
@@ -66,61 +62,82 @@ const LandingPages = () => {
           </Typography>
 
           {/* Carrusel de servicios */}
-          <Swiper
-            spaceBetween={10}
-            slidesPerView={1}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            loop
-            modules={[Autoplay]}
-            style={{
-              borderRadius: "16px",
-              overflow: "hidden",
+          {/* Carrusel de servicios */}
+          <Carousel
+            autoPlay
+            interval={4000}
+            animation="slide"
+            indicators
+            navButtonsAlwaysVisible
+            cycleNavigation
+            sx={{
+              width: "100%",
               maxWidth: "1400px",
               margin: "auto",
             }}
           >
-            {serviceImages.map((item, index) => (
-              <SwiperSlide key={index}>
-                <Box sx={{ position: "relative" }}>
-                  <Box
-                    component="img"
-                    src={item.image}
-                    alt={item.name}
-                    sx={{
-                      width: "100%",
-                      maxHeight: { xs: "400px", md: "700px" },
-                      objectFit: "contain",
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      bottom: 0,
-                      width: "100%",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      color: "white",
-                      py: 2,
-                      textAlign: "center",
-                    }}
+            {services.map((item, index) => (
+              <Box
+                key={index}
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  height: {
+                    xs: "350px",
+                    sm: "450px",
+                    md: "600px",
+                  },
+                  overflow: "hidden",
+                  borderRadius: "16px",
+                  backgroundColor: "#000",
+                }}
+              >
+                {/* UNA SOLA IMAGEN */}
+                <Box
+                  component="img"
+                  src={item.image}
+                  alt={item.name}
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "block",
+                    objectFit: "contain",
+                  }}
+                />
+
+                {/* Información del servicio */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "rgba(0, 0, 0, 0.65)",
+                    color: "white",
+                    textAlign: "center",
+                    py: 2,
+                    px: 2,
+                  }}
+                >
+                  <Typography variant="h5" fontWeight="bold">
+                    {item.name}
+                  </Typography>
+
+                  <Typography variant="body1">{item.description}</Typography>
+
+                  <Button
+                    variant="contained"
+                    color="success"
+                    href="https://wa.me/2615555634?text=Hola%20vengo%20de%20tu%20página%20web%20y%20necesito%20reparar%20mi%20celular"
+                    startIcon={<WhatsAppIcon />}
+                    sx={{ mt: 1 }}
                   >
-                    <Typography variant="h5" fontWeight="bold">
-                      {item.name}
-                    </Typography>
-                    <Typography variant="body1">{item.description}</Typography>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      href="https://wa.me/2615555634?text=Hola%20vengo%20de%20tu%20página%20web%20y%20necesito%20reparar%20mi%20celular"
-                      startIcon={<WhatsAppIcon />}
-                      sx={{ mt: 1 }}
-                    >
-                      Contactar por WhatsApp
-                    </Button>
-                  </Box>
+                    Contactar por WhatsApp
+                  </Button>
                 </Box>
-              </SwiperSlide>
+              </Box>
             ))}
-          </Swiper>
+          </Carousel>
 
           {/* Título promociones */}
           <Typography
